@@ -1,5 +1,6 @@
 from helpers import flash_and_redirect_back
 
+
 def view():
     if auth.is_logged_in():
         record = db.box((db.box.id == request.args(0)) & ((db.box.owner == auth.user.id) | (db.box.private == False)))
@@ -56,7 +57,7 @@ def delete():
     # Delete the old box
     box.delete_record()
 
-    # TODO: redirect
+    # TODO: redirect back to user's collection
 
 
 @auth.requires_login()
@@ -98,10 +99,29 @@ def add_comic():
     unfiled_box = db.box((db.box.name == 'Unfiled') & (db.box.owner == auth.user.id))
     db((db.comicbox.comic == target_comic_id) & (db.comicbox.box == unfiled_box.id)).delete()
 
+    session.flash = 'Added comic to box.'
+    redirect(URL('box', 'view', args=[target_box.id]))
+
 
 @auth.requires_login()
 def remove_comic():
-    pass
+    box = db.box(request.args(0), owner=auth.user.id)
+    if not box:
+        raise HTTP(404)
+
+    comic = db.comic(request.args(1))
+    if not comic:
+        raise HTTP(404)
+
+    db(db.comicbox.box == box.id, db.comicbox.comic == comic.id).delete()
+
+    # if the comic no longer belongs to any boxes, add it to the 'Unfiled' box
+    if not db.comicbox(db.comicbox.comic == comic.id):
+        unfiled_box = db.box((db.box.name == 'Unfiled') & (db.box.owner == auth.user.id))
+        db.comicbox.insert(comic=comic.id, box=unfiled_box.id)
+
+    session.flash = 'Removed comic from box.'
+    redirect(URL('box', 'view', args=[box.id]))
 
 
 @auth.requires_login()
