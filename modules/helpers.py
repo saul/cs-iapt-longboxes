@@ -9,4 +9,4 @@ def flash_and_redirect_back(flash):
     if current.request.env.http_referer:
         redirect(current.request.env.http_referer)
     else:
-        redirect(URL('index'))
+        redirect(URL('default', 'index'))
