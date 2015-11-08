@@ -2,10 +2,8 @@ from helpers import flash_and_redirect_back
 
 
 def view():
-    if auth.is_logged_in():
-        record = db.box((db.box.id == request.args(0)) & ((db.box.owner == auth.user.id) | (db.box.private == False)))
-    else:
-        record = db.box((db.box.id == request.args(0)) & (db.box.private == False))
+    user_id = auth.user.id if auth.is_logged_in() else 0
+    record = db.box((db.box.id == request.args(0)) & ((db.box.owner == user_id) | (db.box.private == False)))
 
     if not record:
         raise HTTP(404)
