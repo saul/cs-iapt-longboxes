@@ -54,6 +54,14 @@ def edit():
     return {'form': form}
 
 
-@auth.requires_login()
 def view():
-    pass
+    comic = db.comic(request.args(0))
+    if not comic:
+        raise HTTP(404)
+
+    # Ensure that the user either owns the comic or that it belongs to a public box
+    user_id = auth.user.id if auth.is_logged_in() else 0
+    if db(db.comicbox.box == db.box.id)(db.comicbox.comic == comic.id)((db.box.owner == user_id) | (db.box.private == False)).isempty():
+        raise HTTP(404)
+
+    return {'record': comic}
