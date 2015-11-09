@@ -10,3 +10,10 @@ def flash_and_redirect_back(flash):
         redirect(current.request.env.http_referer)
     else:
         redirect(URL('default', 'index'))
+
+
+def get_or_create(model, **fields):
+    record = model(**fields)
+    if record:
+        return record.id
+    return model.insert(**fields)
