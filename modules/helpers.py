@@ -4,7 +4,7 @@ from gluon.html import URL
 
 
 def flash_and_redirect_back(flash):
-    current.response.flash = flash
+    current.session.flash = flash
 
     if current.request.env.http_referer:
         redirect(current.request.env.http_referer)
