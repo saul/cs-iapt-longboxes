@@ -37,6 +37,8 @@ auth = Auth(db)
 service = Service()
 plugins = PluginManager()
 
+auth.settings.login_next = URL('collection', 'view')
+
 auth.settings.extra_fields['auth_user'] = [
   Field('screen_name', required=True, unique=True)
 ]
