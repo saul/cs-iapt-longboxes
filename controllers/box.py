@@ -121,3 +121,21 @@ def edit():
         response.flash = 'Form has errors'
 
     return {'form': form}
+
+
+@auth.requires_login()
+def set_privacy():
+    box = get_or_404(db.box, request.args(0), owner=auth.user.id)
+
+    new_privacy_str = request.get_vars['privacy']
+    privacy_str_to_private_bool = {
+        'private': True,
+        'public': False
+    }
+
+    new_private_value = privacy_str_to_private_bool.get(new_privacy_str)
+    if new_private_value is None:
+        flash_and_redirect_back('Invalid privacy option for box.')
+
+    box.update_record(private=new_private_value)
+    flash_and_redirect_back('Box is now %s.' % new_privacy_str)
