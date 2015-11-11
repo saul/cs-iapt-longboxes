@@ -3,12 +3,14 @@ from helpers import flash_and_redirect_back
 
 def view():
     user_id = auth.user.id if auth.is_logged_in() else 0
-    record = db.box((db.box.id == request.args(0)) & ((db.box.owner == user_id) | (db.box.private == False)))
+    box = db.box((db.box.id == request.args(0)) & ((db.box.owner == user_id) | (db.box.private == False)))
 
-    if not record:
+    if not box:
         raise HTTP(404)
 
-    return {'record': record}
+    comics = db(db.comicbox.comic == db.comic.id)(db.comicbox.box == box.id).select(db.comic.ALL)
+
+    return {'box': box, 'comics': comics}
 
 
 @auth.requires_login()
