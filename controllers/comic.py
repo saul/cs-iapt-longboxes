@@ -1,4 +1,5 @@
-from helpers import flash_and_redirect_back, get_or_create
+from helpers import flash_and_redirect_back, get_or_create, get_or_404
+import comic_helpers
 
 
 class ComicForm:
@@ -99,7 +100,7 @@ def edit():
     comic = get_or_404(db.comic, request.args(0))
 
     # Ensure the user owns this comic
-    if db(db.box.owner == auth.user.id)(db.comicbox.box == db.box.id)(db.comicbox.comic == comic.id).isempty():
+    if not comic_helpers.user_can_edit(db, comic.id, auth.user.id):
         flash_and_redirect_back('You cannot edit a comic you did not create.')
 
     form = ComicForm(comic)
@@ -118,7 +119,7 @@ def view():
 
     # Ensure that the user either owns the comic or that it belongs to a public box
     user_id = auth.user.id if auth.is_logged_in() else 0
-    if db(db.comicbox.box == db.box.id)(db.comicbox.comic == comic.id)((db.box.owner == user_id) | (db.box.private == False)).isempty():
+    if not comic_helpers.user_can_view(db, comic.id, user_id):
         raise HTTP(404)
 
-    return {'record': comic}
+    return {'comic': comic}
