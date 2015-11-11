@@ -1,0 +1,49 @@
+<style>
+.comic-cover {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  padding: 0;
+}
+
+.comic-cover::after {
+  content: '';
+  display: block;
+  margin-top: 75%;
+}
+
+.comic-cover-background {
+  position: absolute;
+  background: no-repeat center;
+  background-size: cover;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+</style>
+
+<div class="row">
+{{for comic in comics:}}
+  <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          {{=comic.title}}
+          <span class="text-muted">(issue {{=comic.issue}})</span>
+        </h4>
+      </div>
+
+      <ul class="list-group">
+        <li class="list-group-item comic-cover">
+          <div class="comic-cover-background" style="background-image: url({{=URL('default', 'download', args=[comic.cover_image])}})"></div>
+        </li>
+
+        <a class="list-group-item" href="#">View full comic information...</a>
+        <a class="list-group-item" href="#">View <strong>{{=box.owner.screen_name}}'s</strong> collection...</a>
+      </ul>
+    </div>
+  </div>
+{{pass}}
+</div>

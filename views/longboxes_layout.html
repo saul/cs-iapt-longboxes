@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="{{=T.accepted_language or 'en'}}"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge{{=not request.is_local and ',chrome=1' or ''}}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{=response.title or request.application}}</title>
+
+    <meta name="application-name" content="{{=request.application}}">
+
+    <link rel="stylesheet" href="{{=URL('static','css/bootstrap.min.css')}}"/>
+    <link rel="stylesheet" href="{{=URL('static','css/bootstrap-theme.min.css')}}"/>
+    <link rel="stylesheet" href="{{=URL('static','css/web2py-bootstrap3.css')}}"/>
+    <link rel="shortcut icon" href="{{=URL('static','images/favicon.ico')}}" type="image/x-icon">
+    <link rel="apple-touch-icon" href="{{=URL('static','images/favicon.png')}}">
+
+    <script src="{{=URL('static','js/modernizr-2.8.3.min.js')}}"></script>
+    <!--[if lt IE 9]>
+    <script src="{{=URL('static','js/respond-1.4.2.min.js')}}"></script>
+    <![endif]-->
+
+    {{include 'web2py_ajax.html'}} <!-- this includes jquery.js, calendar.js/.css and web2py.js -->
+
+    {{block head}}{{end}}
+  </head>
+  <body>
+    <div class="flash alert alert-dismissable">{{=response.flash or ''}}</div>
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+
+          <a class="navbar-brand" href="/">Longboxes</a>
+        </div>
+
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+          <ul class="nav navbar-nav">
+            <li>
+              <a href="{{=URL('comic', 'create')}}">New Comic</a>
+            </li>
+
+            <li>
+              <a href="{{=URL('collection', 'view')}}">My Collection</a>
+            </li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            {{=auth.navbar('Hi', mode='dropdown', referrer_actions=None)}}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    {{block header}}
+    {{end}}
+
+    <div class="container">
+      {{block body}}
+        {{include 'dump_vars.html'}}
+      {{end}}
+    </div>
+
+    <script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
+    {{block page_js}}{{end page_js}}
+  </body>
+</html>

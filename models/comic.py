@@ -17,8 +17,13 @@ db.define_table('comic',
                 Field('title', required=True, notnull=True, requires=IS_NOT_EMPTY()),
                 Field('issue', 'integer', required=True, notnull=True, requires=IS_INT_IN_RANGE(1, 1e100), default=1),
                 Field('description', 'text', required=True, notnull=True, requires=[IS_FEWER_WORDS(300), IS_NOT_EMPTY()]),
-                Field('cover_image', 'upload', required=True, notnull=True, requires=[IS_IMAGE()], uploadfolder='uploads/')
+                Field('cover_image', 'upload', required=True, notnull=True, requires=[IS_IMAGE()], uploadfolder='uploads/'),
                 )
+
+db.comic.owner = Field.Virtual(
+    'owner',
+    lambda row: db(db.comicbox.comic == row.id)(db.box.id == db.comicbox.box)(db.auth_user.id == db.box.owner).select(db.auth_user).first()
+)
 
 db.define_table('comicbox',
                 Field('box', db.box, required=True, notnull=True),

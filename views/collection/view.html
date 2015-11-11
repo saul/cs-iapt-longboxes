@@ -1,0 +1,25 @@
+{{extend 'longboxes_layout.html'}}
+
+{{block body}}
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <li class="active">{{=user.screen_name}}</li>
+</ol>
+
+<h2>{{=user.screen_name}}</h2>
+
+<h3>Boxes</h3>
+<ul class="list-group">
+  {{for box in boxes:}}
+    <a class="list-group-item" href="{{=URL('box', 'view', args=[box.id])}}">
+      {{=box.name}}
+    </a>
+  {{pass}}
+</ul>
+
+{{if comics:}}
+  <h3>Comics</h3>
+  {{include 'comics_preview.html'}}
+{{pass}}
+
+{{end}}

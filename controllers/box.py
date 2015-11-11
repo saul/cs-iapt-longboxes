@@ -52,7 +52,8 @@ def delete():
     # Delete the old box
     box.delete_record()
 
-    # TODO: redirect back to user's collection
+    session.flash = 'Box deleted'
+    redirect(URL('collection', 'view'))
 
 
 @auth.requires_login()

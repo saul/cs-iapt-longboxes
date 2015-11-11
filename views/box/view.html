@@ -1,0 +1,48 @@
+{{extend 'longboxes_layout.html'}}
+
+{{block body}}
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <li><a href="{{=URL('collection', 'view', args=[box.owner.id])}}">{{=box.owner.screen_name}}</a></li>
+  <li class="active">Box: {{=box.name}}</li>
+</ol>
+
+<div class="clearfix">
+  <h2 class="pull-left">
+    {{if box.private:}}
+      <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+    {{pass}}
+
+    {{=box.name}}
+    <small>
+      by
+      <a href="{{=URL('collection', 'view', args=[box.owner.id])}}">
+        {{=box.owner.screen_name}}
+      </a>
+    </small>
+  </h2>
+
+  {{if auth.user and box.owner == auth.user.id:}}
+  <div class="btn-group pull-right" role="group">
+    {{if box.name != 'Unfiled':}}
+    <a class="btn btn-default" href="{{=URL('box', 'delete', args=[box.id])}}" onclick="return confirm('Are you sure you want to delete this box?')">
+      Delete
+    </a>
+    {{pass}}
+
+    <a class="btn btn-default" href="{{=URL('box', 'edit', args=[box.id])}}">
+      Edit
+    </a>
+
+    {{toggled_privacy = 'public' if box.private else 'private'}}
+    <a class="btn btn-default" href="{{=URL('box', 'set_privacy', args=[box.id], vars={'privacy': toggled_privacy})}}">
+      Make {{=toggled_privacy.capitalize()}}
+    </a>
+  </div>
+  {{pass}}
+</div>
+
+<h3>Comics</h3>
+{{include 'comics_preview.html'}}
+
+{{end}}

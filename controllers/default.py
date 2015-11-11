@@ -1,7 +1,7 @@
 def index():
     # Find 5 largest public boxes
     count = db.comicbox.box.count()
-    largest = db(db.comicbox.box == db.box.id)(db.box.private == False).select(db.box.ALL, count, groupby=db.comicbox.box, orderby=~count, limitby=(0, 5))
+    largest = db(db.comicbox.box == db.box.id)(db.box.private == False).select(db.box.ALL, groupby=db.comicbox.box, orderby=~count, limitby=(0, 5))
 
     # Find 5 most recent public boxes
     recent = db(db.box.private == False).select(orderby=~db.box.created, limitby=(0, 5))
