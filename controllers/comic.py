@@ -85,7 +85,13 @@ def create():
 
 @auth.requires_login()
 def delete():
-    pass
+    comic = get_or_404(db.comic, request.args(0))
+
+    if not comic_helpers.user_can_edit(db, comic.id, auth.user.id):
+        flash_and_redirect_back('You cannot delete a comic you did not create.')
+
+    comic.delete_record()
+    flash_and_redirect_back('Comic deleted')
 
 
 @auth.requires_login()
