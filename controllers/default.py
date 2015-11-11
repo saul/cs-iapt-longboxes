@@ -1,23 +1,12 @@
-# -*- coding: utf-8 -*-
-# this file is released under public domain and you can use without limitations
-
-#########################################################################
-## This is a sample controller
-## - index is the default action of any application
-## - user is required for authentication and authorization
-## - download is for downloading files uploaded in the db (does streaming)
-#########################################################################
-
 def index():
-    """
-    example action using the internationalization operator T and flash
-    rendered by views/default/index.html or views/generic.html
+    # Find 5 largest public boxes
+    count = db.comicbox.box.count()
+    largest = db(db.comicbox.box == db.box.id)(db.box.private == False).select(db.box.ALL, count, groupby=db.comicbox.box, orderby=~count, limitby=(0, 5))
 
-    if you need a simple wiki simply replace the two lines below with:
-    return auth.wiki()
-    """
-    response.flash = T("Hello World")
-    return dict(message=T('Welcome to web2py!'))
+    # Find 5 most recent public boxes
+    recent = db(db.box.private == False).select(orderby=~db.box.created, limitby=(0, 5))
+
+    return {'largest': largest, 'recent': recent}
 
 
 def user():
@@ -36,7 +25,7 @@ def user():
         @auth.requires_permission('read','table name',record_id)
     to decorate functions that need access control
     """
-    return dict(form=auth())
+    return {'form': auth()}
 
 
 @cache.action()
@@ -46,15 +35,3 @@ def download():
     http://..../[app]/default/download/[filename]
     """
     return response.download(request, db)
-
-
-def call():
-    """
-    exposes services. for example:
-    http://..../[app]/default/call/jsonrpc
-    decorate with @services.jsonrpc the functions to expose
-    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv
-    """
-    return service()
-
-
