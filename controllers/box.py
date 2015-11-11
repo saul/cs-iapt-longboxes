@@ -1,12 +1,9 @@
-from helpers import flash_and_redirect_back
+from helpers import flash_and_redirect_back, get_or_404
 
 
 def view():
     user_id = auth.user.id if auth.is_logged_in() else 0
-    box = db.box((db.box.id == request.args(0)) & ((db.box.owner == user_id) | (db.box.private == False)))
-
-    if not box:
-        raise HTTP(404)
+    box = get_or_404(db.box, ((db.box.id == request.args(0)) & ((db.box.owner == user_id) | (db.box.private == False))))
 
     comics = db(db.comicbox.comic == db.comic.id)(db.comicbox.box == box.id).select(db.comic.ALL)
 
@@ -29,9 +26,7 @@ def create():
 
 @auth.requires_login()
 def delete():
-    box = db.box(request.args(0), owner=auth.user.id)
-    if not box:
-        raise HTTP(404)
+    box = get_or_404(db.box, request.args(0), owner=auth.user.id)
 
     if box.name == 'Unfiled':
         session.flash = 'You cannot delete the Unfiled box.'
@@ -62,13 +57,8 @@ def delete():
 
 @auth.requires_login()
 def add_comic():
-    target_box = db.box(request.args(0), owner=auth.user.id)
-    if not target_box:
-        raise HTTP(404)
-
-    source_comic = db.comic(request.args(1))
-    if not source_comic:
-        raise HTTP(404)
+    target_box = get_or_404(db.box, request.args(0), owner=auth.user.id)
+    source_comic = get_or_404(db.comic, request.args(1))
 
     # Is the comic already in the box we want to add it to?
     if db.comicbox((db.comicbox.box == target_box.id) & (db.comicbox.comic == source_comic.id)):
@@ -105,13 +95,8 @@ def add_comic():
 
 @auth.requires_login()
 def remove_comic():
-    box = db.box(request.args(0), owner=auth.user.id)
-    if not box:
-        raise HTTP(404)
-
-    comic = db.comic(request.args(1))
-    if not comic:
-        raise HTTP(404)
+    box = get_or_404(db.box, request.args(0), owner=auth.user.id)
+    comic = get_or_404(db.comic, request.args(1))
 
     db(db.comicbox.box == box.id, db.comicbox.comic == comic.id).delete()
 
@@ -126,9 +111,7 @@ def remove_comic():
 
 @auth.requires_login()
 def edit():
-    record = db.box(request.args(0), owner=auth.user.id)
-    if not record:
-        raise HTTP(404)
+    record = get_or_404(db.box, request.args(0), owner=auth.user.id)
 
     form = SQLFORM(db.box, record, formstyle='table3cols')
 
