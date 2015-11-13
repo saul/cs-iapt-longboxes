@@ -1,25 +1,35 @@
-{{extend 'longboxes_layout.html'}}
+{{extend 'longboxes_sidebar.html'}}
 
-{{block body}}
+{{block pre_body}}
 <ol class="breadcrumb">
   <li><a href="/">Home</a></li>
   <li class="active">{{=user.screen_name}}</li>
 </ol>
 
-<h2>{{=user.screen_name}}</h2>
+<h2>{{=user.screen_name}}'s collection</h2>
+{{end}}
 
-<h3>Boxes</h3>
-<ul class="list-group">
+{{block sidebar}}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Boxes</h3>
+  </div>
+
+  <ul class="list-group">
   {{for box in boxes:}}
     <a class="list-group-item" href="{{=URL('box', 'view', args=[box.id])}}">
-      {{=box.name}}
+    {{=box.name}}
     </a>
   {{pass}}
-</ul>
+  </ul>
+</div>
+{{end}}
 
-{{if comics:}}
+{{block main}}
   <h3>Comics</h3>
-  {{include 'comics_preview.html'}}
-{{pass}}
-
+  {{if comics:}}
+    {{include 'comics_preview.html'}}
+  {{else:}}
+    <p class="text-muted">This user has no comics.</p>
+  {{pass}}
 {{end}}

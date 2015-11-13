@@ -1,0 +1,99 @@
+{{extend 'longboxes_sidebar.html'}}
+
+{{block pre_body}}
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <li><a href="{{=URL('collection', 'view', args=[owner.id])}}">{{=owner.screen_name}}</a></li>
+  <li class="active">Comic: {{=comic.title}}</li>
+</ol>
+
+<div class="header-actions clearfix">
+  <h2>
+  {{=comic.title}}
+    <small class="text-muted">
+      (issue {{=comic.issue}})
+    </small>
+  </h2>
+
+  <div class="btn-group" role="group">
+  {{if can_edit:}}
+    <a class="btn btn-danger" href="{{=URL('comic', 'delete', args=[comic.id])}}" onclick="return confirm('Are you sure you want to delete this box?')">
+      <span class="glyphicon glyphicon-trash"></span>
+      Delete
+    </a>
+
+    <a class="btn btn-default" href="{{=URL('comic', 'edit', args=[comic.id])}}">
+      <span class="glyphicon glyphicon-pencil"></span>
+      Edit
+    </a>
+  {{pass}}
+
+    <a class="btn btn-success" href="#">
+      <span class="glyphicon glyphicon-plus-sign"></span>
+      Add to box
+    </a>
+  </div>
+
+</div>
+{{end}}
+
+{{block sidebar}}
+<ul class="list-group">
+  <li class="list-group-item">
+    <h4 class="list-group-item-heading">Publisher</h4>
+    <p class="list-group-item-text">{{=comic.publisher.name}}</p>
+  </li>
+
+  <li class="list-group-item">
+    <h4 class="list-group-item-heading">Writers</h4>
+    <p class="list-group-item-text">
+      {{=', '.join(map(lambda x: x.name, writers))}}
+    </p>
+  </li>
+
+  <li class="list-group-item">
+    <h4 class="list-group-item-heading">Artists</h4>
+    <p class="list-group-item-text">
+    {{=', '.join(map(lambda x: x.name, artists))}}
+    </p>
+  </li>
+</ul>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Belongs to</h3>
+  </div>
+
+  <ul class="list-group">
+  {{for box in boxes:}}
+    <li class="list-group-item">
+      <a href="{{=URL('box', 'view', args=[box.id])}}">
+        {{=box.name}}
+      </a>
+
+      {{if can_edit and box.name != 'Unfiled':}}
+        <div class="pull-right">
+          <a class="btn btn-xs btn-danger" href="{{=URL('box', 'remove_comic', args=[box.id, comic.id])}}" title="Remove comic from box">
+            &times;
+          </a>
+        </div>
+      {{pass}}
+    </li>
+  {{pass}}
+
+    <a class="list-group-item" href="{{=URL('collection', 'view', args=[owner.id])}}">
+      <span class="glyphicon glyphicon-user"></span>
+      View the rest of <em>{{=owner.screen_name}}</em>'s collection...
+    </a>
+  </ul>
+</div>
+{{end}}
+
+{{block main}}
+<img class="comic-cover" src="{{=URL('default', 'download', args=[comic.cover_image])}}">
+
+<h3>Description</h3>
+<p class="lead">
+{{=comic.description}}
+</p>
+{{end}}

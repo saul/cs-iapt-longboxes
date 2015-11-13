@@ -3,13 +3,15 @@ from gluon.http import redirect, HTTP
 from gluon.html import URL
 
 
-def flash_and_redirect_back(flash):
+def flash_and_redirect_back(flash, default=URL('default', 'index'), avoid=None):
     current.session.flash = flash
 
-    if current.request.env.http_referer:
+    referrer = current.request.env.http_referer
+
+    if referrer and avoid not in referrer:
         redirect(current.request.env.http_referer)
     else:
-        redirect(URL('default', 'index'))
+        redirect(default)
 
 
 def get_or_404(model, id, **kwargs):

@@ -92,7 +92,7 @@ def delete():
         flash_and_redirect_back('You cannot delete a comic you did not create.')
 
     comic.delete_record()
-    flash_and_redirect_back('Comic deleted')
+    flash_and_redirect_back('Comic deleted', default=URL('collection', 'view'), avoid='/comic/view')
 
 
 @auth.requires_login()
@@ -122,4 +122,11 @@ def view():
     if not comic_helpers.user_can_view(db, comic.id, user_id):
         raise HTTP(404)
 
-    return {'comic': comic}
+    return {
+        'comic': comic,
+        'boxes': db(db.comicbox.comic == comic.id)(db.box.id == db.comicbox.box)((db.box.private == False) | (db.box.owner == user_id)).select(db.box.ALL),
+        'artists': db(db.comicartist.comic == comic.id)(db.artist.id == db.comicartist.artist).select(db.artist.ALL),
+        'writers': db(db.comicwriter.comic == comic.id)(db.writer.id == db.comicwriter.writer).select(db.writer.ALL),
+        'owner': db(db.comicbox.comic == comic.id)(db.box.id == db.comicbox.box)(db.auth_user.id == db.box.owner).select(db.auth_user.ALL).first(),
+        'can_edit': comic_helpers.user_can_edit(db, comic.id, user_id)
+    }

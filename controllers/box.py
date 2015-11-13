@@ -7,7 +7,11 @@ def view():
 
     comics = db(db.comicbox.comic == db.comic.id)(db.comicbox.box == box.id).select(db.comic.ALL)
 
-    return {'box': box, 'comics': comics}
+    return {
+        'box': box,
+        'comics': comics,
+        'can_edit': user_id == box.owner.id
+    }
 
 
 @auth.requires_login()
@@ -99,6 +103,9 @@ def remove_comic():
     box = get_or_404(db.box, request.args(0), owner=auth.user.id)
     comic = get_or_404(db.comic, request.args(1))
 
+    if box.name == 'Unfiled':
+        flash_and_redirect_back('A comic cannot be removed from the Unfiled box.')
+
     db(db.comicbox.box == box.id, db.comicbox.comic == comic.id).delete()
 
     # if the comic no longer belongs to any boxes, add it to the 'Unfiled' box
@@ -106,8 +113,7 @@ def remove_comic():
         unfiled_box = db.box((db.box.name == 'Unfiled') & (db.box.owner == auth.user.id))
         db.comicbox.insert(comic=comic.id, box=unfiled_box.id)
 
-    session.flash = 'Removed comic from box.'
-    redirect(URL('box', 'view', args=[box.id]))
+    flash_and_redirect_back('Removed comic from box.')
 
 
 @auth.requires_login()

@@ -1,0 +1,15 @@
+{{extend 'longboxes_layout.html'}}
+
+{{block body}}
+<div class="row">
+  <div class="col-sm-3">
+    {{block sidebar}}
+    {{end}}
+  </div>
+
+  <div class="col-sm-9">
+    {{block main}}
+    {{end}}
+  </div>
+</div>
+{{end}}

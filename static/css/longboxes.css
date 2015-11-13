@@ -1,0 +1,39 @@
+body {
+  padding-top: 70px;
+}
+
+.comic-cover {
+  max-width: 100%;
+}
+
+.comic-cover-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  padding: 0;
+}
+
+.comic-cover-container::after {
+  content: '';
+  display: block;
+  margin-top: 75%;
+}
+
+.comic-cover-background {
+  position: absolute;
+  background: no-repeat center;
+  background-size: cover;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.header-actions h2 {
+  margin-top: 0;
+  float: left;
+}
+
+.header-actions .btn-group {
+  float: right;
+}

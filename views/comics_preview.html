@@ -1,47 +1,39 @@
-<style>
-.comic-cover {
-  display: inline-block;
-  position: relative;
-  width: 100%;
-  padding: 0;
-}
-
-.comic-cover::after {
-  content: '';
-  display: block;
-  margin-top: 75%;
-}
-
-.comic-cover-background {
-  position: absolute;
-  background: no-repeat center;
-  background-size: cover;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-</style>
-
 <div class="row">
-{{for comic in comics:}}
+{{for i, comic in enumerate(comics):}}
+  {{if i % 3 == 0:}}
+    </div>
+    <div class="row">
+  {{pass}}
+
   <div class="col-md-4">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          {{=comic.title}}
+          {{=comic.title}}<br />
           <span class="text-muted">(issue {{=comic.issue}})</span>
         </h4>
       </div>
 
       <ul class="list-group">
-        <li class="list-group-item comic-cover">
-          <div class="comic-cover-background" style="background-image: url({{=URL('default', 'download', args=[comic.cover_image])}})"></div>
+        <li class="list-group-item">
+          <div class="comic-cover-container">
+            <div class="comic-cover-background" style="background-image: url({{=URL('default', 'download', args=[comic.cover_image])}})"></div>
+          </div>
         </li>
 
-        <a class="list-group-item" href="#">View full comic information...</a>
-        <a class="list-group-item" href="#">View <strong>{{=box.owner.screen_name}}'s</strong> collection...</a>
+        <a class="list-group-item" href="{{=URL('comic', 'view', args=[comic.id])}}">
+          <span class="glyphicon glyphicon-expand"></span>
+          More information...
+        </a>
+
+        {{collection_view_url = URL('collection', 'view', args=[box.owner.id])}}
+
+        {{if collection_view_url not in request.url:}}
+        <a class="list-group-item" href="{{=collection_view_url}}">
+          <span class="glyphicon glyphicon-user"></span>
+          View <em>{{=box.owner.screen_name}}</em>'s collection...
+        </a>
+        {{pass}}
       </ul>
     </div>
   </div>
