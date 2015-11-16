@@ -9,7 +9,7 @@ def view():
         if not logged_in_user:
             redirect(URL('default', 'user', args=['login'], vars={'_next': URL()}))
 
-        redirect(URL('collection', 'view', args=[auth.user.id]))
+        redirect(URL('collection', 'view', args=[logged_in_user]))
 
     user = get_or_404(db.auth_user, request.args(0))
 
@@ -20,5 +20,6 @@ def view():
     return {
         'user': user,
         'boxes': boxes,
-        'comics': comics
+        'comics': comics,
+        'user_owned': user.id == logged_in_user,
     }

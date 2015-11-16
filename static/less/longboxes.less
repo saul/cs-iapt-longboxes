@@ -1,0 +1,87 @@
+@import "variables.less";
+@import "mixins.less";
+
+body {
+  padding-top: 50px;
+}
+
+nav + main {
+  margin-top: 20px;
+}
+
+main > h2:first-child {
+  margin-top: 0; /* remove the margin as we already have some on the main element */
+}
+
+.comic-cover {
+  max-width: 100%;
+}
+
+.comic-cover-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  padding: 0;
+
+  &::after {
+    content: '';
+    display: block;
+    margin-top: 75%;
+  }
+}
+
+.comic-cover-background {
+  position: absolute;
+  background: no-repeat center;
+  background-size: cover;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.header-actions {
+  .clearfix;
+
+  h2 {
+    margin-top: 0;
+    float: left;
+  }
+
+  .btn-group {
+    float: right;
+  }
+}
+
+.lb-breadcrumbs {
+  @breadcrumb-height: 40px;
+
+  background-color: @panel-default-heading-bg;
+  border-bottom: solid 1px @panel-default-border;
+
+  ol {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  li {
+    display: inline-block;
+    height: @breadcrumb-height;
+    line-height: @breadcrumb-height;
+
+    &.active { color: @text-muted; }
+
+    a {
+      display: inline-block;
+      height: @breadcrumb-height;
+    }
+  }
+
+  li + li {
+    padding-left: 20px;
+    background-image: url('../images/breadcrumb_sep.png');
+    background-repeat: no-repeat;
+    background-size: 13px 40px;
+  }
+}

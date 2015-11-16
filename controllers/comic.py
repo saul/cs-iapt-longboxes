@@ -31,8 +31,9 @@ class ComicForm:
         self.form = SQLFORM.factory(
             *fields,
             record=record,
-            formstyle='table3cols',
-            table_name='comic'
+            formstyle='bootstrap3_inline',
+            table_name='comic',
+            showid=False
         )
 
     def _on_success(self, form):
@@ -81,7 +82,10 @@ def create():
     elif form.form.errors:
         response.flash = 'Form has errors'
 
-    return {'form': form.form}
+    return {
+        'form': form.form,
+        'owner': auth.user,
+    }
 
 
 @auth.requires_login()
@@ -111,7 +115,11 @@ def edit():
     elif form.form.errors:
         response.flash = 'Form has errors'
 
-    return {'form': form.form}
+    return {
+        'form': form.form,
+        'comic': comic,
+        'owner': auth.user,
+    }
 
 
 def view():

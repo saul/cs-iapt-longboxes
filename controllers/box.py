@@ -7,16 +7,33 @@ def view():
 
     comics = db(db.comicbox.comic == db.comic.id)(db.comicbox.box == box.id).select(db.comic.ALL)
 
+    user_owned = user_id == box.owner.id
+    can_edit = user_owned and box.name != 'Unfiled'
+
+    if can_edit:
+        rename_form = SQLFORM(db.box, box, formstyle='bootstrap3_inline', fields=['name'], showid=False)
+
+        if rename_form.process().accepted:
+            session.flash = 'Box renamed successfully'
+            redirect(request.env['PATH_INFO'])
+
+        if rename_form.errors:
+            response.flash = 'Form has errors'
+    else:
+        rename_form = None
+
     return {
         'box': box,
         'comics': comics,
-        'can_edit': user_id == box.owner.id
+        'can_edit': can_edit,
+        'user_owned': user_owned,
+        'rename_form': rename_form
     }
 
 
 @auth.requires_login()
 def create():
-    form = SQLFORM(db.box, formstyle='table3cols')
+    form = SQLFORM(db.box, formstyle='bootstrap3_inline', fields=['name', 'private'])
     form.vars.owner = auth.user
 
     if form.process().accepted:
@@ -25,7 +42,10 @@ def create():
     elif form.errors:
         response.flash = 'Form has errors'
 
-    return {'form': form}
+    return {
+        'form': form,
+        'owner': form.vars.owner
+    }
 
 
 @auth.requires_login()
@@ -114,20 +134,6 @@ def remove_comic():
         db.comicbox.insert(comic=comic.id, box=unfiled_box.id)
 
     flash_and_redirect_back('Removed comic from box.')
-
-
-@auth.requires_login()
-def edit():
-    record = get_or_404(db.box, request.args(0), owner=auth.user.id)
-
-    form = SQLFORM(db.box, record, formstyle='table3cols')
-
-    if form.process().accepted:
-        response.flash = 'Box updated successfully'
-    elif form.errors:
-        response.flash = 'Form has errors'
-
-    return {'form': form}
 
 
 @auth.requires_login()

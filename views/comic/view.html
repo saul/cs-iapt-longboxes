@@ -1,13 +1,12 @@
 {{extend 'longboxes_sidebar.html'}}
 
-{{block pre_body}}
-<ol class="breadcrumb">
-  <li><a href="/">Home</a></li>
-  <li><a href="{{=URL('collection', 'view', args=[owner.id])}}">{{=owner.screen_name}}</a></li>
-  <li class="active">Comic: {{=comic.title}}</li>
-</ol>
+{{block breadcrumbs}}
+<li><a href="{{=URL('collection', 'view', args=[owner.id])}}">{{=owner.screen_name}}</a></li>
+<li class="active">Comic: {{=comic.title}}</li>
+{{end}}
 
-<div class="header-actions clearfix">
+{{block pre_body}}
+<div class="header-actions">
   <h2>
   {{=comic.title}}
     <small class="text-muted">
@@ -68,6 +67,7 @@
   {{for box in boxes:}}
     <li class="list-group-item">
       <a href="{{=URL('box', 'view', args=[box.id])}}">
+        <span class="glyphicon glyphicon-th"></span>
         {{=box.name}}
       </a>
 

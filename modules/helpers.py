@@ -8,7 +8,7 @@ def flash_and_redirect_back(flash, default=URL('default', 'index'), avoid=None):
 
     referrer = current.request.env.http_referer
 
-    if referrer and avoid not in referrer:
+    if referrer and (avoid is None or avoid not in referrer):
         redirect(current.request.env.http_referer)
     else:
         redirect(default)

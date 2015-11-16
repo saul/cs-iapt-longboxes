@@ -1,41 +1,45 @@
-<div class="row">
-{{for i, comic in enumerate(comics):}}
-  {{if i % 3 == 0:}}
-    </div>
-    <div class="row">
+{{if comics:}}
+  <div class="row">
+  {{for i, comic in enumerate(comics):}}
+    {{if i % 3 == 0:}}
+  </div>
+  <div class="row">
   {{pass}}
 
-  <div class="col-md-4">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
           {{=comic.title}}<br />
-          <span class="text-muted">(issue {{=comic.issue}})</span>
-        </h4>
-      </div>
+            <span class="text-muted">(issue {{=comic.issue}})</span>
+          </h4>
+        </div>
 
-      <ul class="list-group">
-        <li class="list-group-item">
-          <div class="comic-cover-container">
-            <div class="comic-cover-background" style="background-image: url({{=URL('default', 'download', args=[comic.cover_image])}})"></div>
-          </div>
-        </li>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <div class="comic-cover-container">
+              <div class="comic-cover-background" style="background-image: url({{=URL('default', 'download', args=[comic.cover_image])}})"></div>
+            </div>
+          </li>
 
-        <a class="list-group-item" href="{{=URL('comic', 'view', args=[comic.id])}}">
-          <span class="glyphicon glyphicon-expand"></span>
-          More information...
-        </a>
+          <a class="list-group-item" href="{{=URL('comic', 'view', args=[comic.id])}}">
+            <span class="glyphicon glyphicon-expand"></span>
+            More information...
+          </a>
 
         {{collection_view_url = URL('collection', 'view', args=[box.owner.id])}}
 
         {{if collection_view_url not in request.url:}}
-        <a class="list-group-item" href="{{=collection_view_url}}">
-          <span class="glyphicon glyphicon-user"></span>
-          View <em>{{=box.owner.screen_name}}</em>'s collection...
-        </a>
+          <a class="list-group-item" href="{{=collection_view_url}}">
+            <span class="glyphicon glyphicon-user"></span>
+            View <em>{{=box.owner.screen_name}}</em>'s collection...
+          </a>
         {{pass}}
-      </ul>
+        </ul>
+      </div>
     </div>
+  {{pass}}
   </div>
+{{else:}}
+  <p class="text-muted">No comics to display.</p>
 {{pass}}
-</div>

@@ -1,0 +1,15 @@
+{{extend 'longboxes_layout.html'}}
+
+{{block header}}
+<nav class="lb-breadcrumbs">
+  <div class="container">
+    <ol>
+      <li>
+        <a href="/"><span class="glyphicon glyphicon-home"></span></a>
+      </li>
+      {{block breadcrumbs}}
+      {{end}}
+    </ol>
+  </div>
+</nav>
+{{end}}

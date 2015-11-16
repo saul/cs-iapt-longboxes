@@ -1,13 +1,12 @@
-{{extend 'longboxes_layout.html'}}
+{{extend 'longboxes_singlecol.html'}}
+
+{{block breadcrumbs}}
+<li><a href="{{=URL('collection', 'view', args=[box.owner.id])}}">{{=box.owner.screen_name}}</a></li>
+<li class="active">Box: {{=box.name}}</li>
+{{end}}
 
 {{block body}}
-<ol class="breadcrumb">
-  <li><a href="/">Home</a></li>
-  <li><a href="{{=URL('collection', 'view', args=[box.owner.id])}}">{{=box.owner.screen_name}}</a></li>
-  <li class="active">Box: {{=box.name}}</li>
-</ol>
-
-<div class="clearfix header-actions">
+<div class="header-actions">
   <h2>
     {{if box.private:}}
       <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
@@ -22,27 +21,53 @@
     </small>
   </h2>
 
-  {{if can_edit:}}
+  {{if user_owned:}}
   <div class="btn-group" role="group">
-    {{if box.name != 'Unfiled':}}
-    <a class="btn btn-danger" href="{{=URL('box', 'delete', args=[box.id])}}" onclick="return confirm('Are you sure you want to delete this box?')">
-      Delete
-    </a>
-    {{pass}}
+    {{if can_edit:}}
+      <a class="btn btn-danger" href="{{=URL('box', 'delete', args=[box.id])}}" onclick="return confirm('Are you sure you want to delete this box?')">
+        <span class="glyphicon glyphicon-trash"></span>
+        Delete
+      </a>
 
-    <a class="btn btn-default" href="{{=URL('box', 'edit', args=[box.id])}}">
-      Rename
-    </a>
+      <button class="btn btn-default" data-toggle="modal" data-target="#rename_modal">
+        <span class="glyphicon glyphicon-pencil"></span>
+        Rename
+      </button>
+    {{pass}}
 
     {{toggled_privacy = 'public' if box.private else 'private'}}
     <a class="btn btn-default" href="{{=URL('box', 'set_privacy', args=[box.id], vars={'privacy': toggled_privacy})}}">
+      <span class="glyphicon glyphicon-lock"></span>
       Make {{=toggled_privacy.capitalize()}}
     </a>
   </div>
   {{pass}}
 </div>
 
-<h3>Comics</h3>
+{{if rename_form:}}
+  <div class="modal fade" id="rename_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Rename box</h4>
+        </div>
+
+        <div class="modal-body">
+          {{=rename_form}}
+        </div>
+
+        <!--
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Rename</button>
+        </div>
+        -->
+      </div>
+    </div>
+  </div>
+{{pass}}
+
 {{include 'comics_preview.html'}}
 
 {{end}}

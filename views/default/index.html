@@ -1,45 +1,59 @@
 {{extend 'longboxes_layout.html'}}
 
+{{block header}}
+
+<header class="jumbotron">
+  <div class="container">
+    <h1>Your collection starts here...</h1>
+
+    <p>
+      Longboxes is a site to manage your own comic book collection and explore comics owned by other avid collectors. Registration takes less than a minute and is completely free, so what are you waiting for?
+    </p>
+
+    <p>
+      <a href="{{=URL('default', 'user', args=['register'])}}" class="btn btn-primary btn-lg">
+        Create an account
+      </a>
+
+      <a href="{{=URL('default', 'user', args=['login'])}}" class="btn btn-default">
+        Login
+      </a>
+    </p>
+  </div>
+</header>
+
+{{end}}
+
 {{block body}}
-
-<p>Not putting any stupid placeholder text because I'm bound to forget it.</p>
-
-<h2>Explore</h2>
 <div class="row">
   <div class="col-sm-6">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Largest boxes</h3>
-      </div>
+    <h2>Largest boxes</h2>
 
-      <ul class="list-group">
-        {{for box in largest:}}
-        <a class="list-group-item" href="{{=URL('box', 'view', args=[box.id])}}">
-           {{=box.name}}
+    <ul class="list-group">
+    {{for box in largest:}}
+      <a class="list-group-item" href="{{=URL('box', 'view', args=[box.id])}}">
+        <span class="glyphicon glyphicon-th"></span>
+        {{=box.name}}
 
-           <span class="text-muted">by {{=box.owner.screen_name}}</span>
-        </a>
-        {{pass}}
-      </ul>
-    </div>
+        <span class="text-muted">by {{=box.owner.screen_name}}</span>
+      </a>
+    {{pass}}
+    </ul>
   </div>
 
   <div class="col-sm-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Recently created boxes</h3>
-        </div>
+    <h2>Recently created boxes</h2>
 
-        <ul class="list-group">
-          {{for box in recent:}}
-            <a class="list-group-item" href="{{=URL('box', 'view', args=[box.id])}}">
-            {{=box.name}}
+    <ul class="list-group">
+    {{for box in recent:}}
+      <a class="list-group-item" href="{{=URL('box', 'view', args=[box.id])}}">
+        <span class="glyphicon glyphicon-th"></span>
+        {{=box.name}}
 
-            <span class="text-muted">by {{=box.owner.screen_name}}</span>
-            </a>
-          {{pass}}
-        </ul>
-      </div>
-    </div>
+        <span class="text-muted">by {{=box.owner.screen_name}}</span>
+      </a>
+    {{pass}}
+    </ul>
+  </div>
 </div>
 {{end}}

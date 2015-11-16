@@ -1,15 +1,15 @@
-{{extend 'longboxes_layout.html'}}
+{{extend 'longboxes_singlecol.html'}}
 
 {{block body}}
 <div class="row">
-  <div class="col-sm-3">
+  <aside class="col-sm-3 col-sm-push-9">
     {{block sidebar}}
     {{end}}
-  </div>
+  </aside>
 
-  <div class="col-sm-9">
+  <article class="col-sm-9 col-sm-pull-3">
     {{block main}}
     {{end}}
-  </div>
+  </article>
 </div>
 {{end}}

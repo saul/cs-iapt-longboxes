@@ -1,11 +1,10 @@
 {{extend 'longboxes_sidebar.html'}}
 
-{{block pre_body}}
-<ol class="breadcrumb">
-  <li><a href="/">Home</a></li>
-  <li class="active">{{=user.screen_name}}</li>
-</ol>
+{{block breadcrumbs}}
+<li class="active">{{=user.screen_name}}</li>
+{{end}}
 
+{{block pre_body}}
 <h2>{{=user.screen_name}}'s collection</h2>
 {{end}}
 
@@ -18,7 +17,15 @@
   <ul class="list-group">
   {{for box in boxes:}}
     <a class="list-group-item" href="{{=URL('box', 'view', args=[box.id])}}">
-    {{=box.name}}
+      <span class="glyphicon glyphicon-th"></span>
+      {{=box.name}}
+    </a>
+  {{pass}}
+
+  {{if user_owned:}}
+    <a class="list-group-item list-group-item-success" href="{{=URL('box', 'create')}}">
+      <span class="glyphicon glyphicon-plus"></span>
+      New box
     </a>
   {{pass}}
   </ul>
@@ -26,10 +33,5 @@
 {{end}}
 
 {{block main}}
-  <h3>Comics</h3>
-  {{if comics:}}
-    {{include 'comics_preview.html'}}
-  {{else:}}
-    <p class="text-muted">This user has no comics.</p>
-  {{pass}}
+  {{include 'comics_preview.html'}}
 {{end}}
