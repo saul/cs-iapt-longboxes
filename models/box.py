@@ -7,6 +7,15 @@ db.define_table('box',
                 Field('created', 'datetime', required=True, notnull=True, default=datetime.datetime.now, writable=False)
                 )
 
+
+class BoxVirtualFields:
+    def is_unfiled(self):
+        return self.box.name == 'Unfiled'
+
+
+db.box.virtualfields.append(BoxVirtualFields())
+
+
 def on_user_created(form):
     db.box.insert(owner=form.vars.id, name='Unfiled', private=True)
 
