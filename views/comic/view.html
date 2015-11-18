@@ -16,7 +16,7 @@
 
   <div class="btn-group" role="group">
   {{if can_edit:}}
-    <a class="btn btn-danger" href="{{=URL('comic', 'delete', args=[comic.id])}}" onclick="return confirm('Are you sure you want to delete this box?')">
+    <a class="btn btn-danger" href="{{=URL('comic', 'delete', args=[comic.id])}}" data-confirm-click="delete this comic">
       <span class="glyphicon glyphicon-trash"></span>
       Delete
     </a>
@@ -50,9 +50,9 @@
             <div class="form-group">
               <label for="comic">Box</label>
               <select class="form-control" name="box">
-                {{for box in available_boxes:}}
+              {{for box in available_boxes:}}
                   <option value="{{=box.id}}">{{=box.name}}</option>
-                {{pass}}
+              {{pass}}
               </select>
             </div>
           </div>
