@@ -7,18 +7,23 @@
     <h1>Your collection starts here...</h1>
 
     <p>
-      Longboxes is a site to manage your own comic book collection and explore comics owned by other avid collectors. Registration takes less than a minute and is completely free, so what are you waiting for?
+      Longboxes is a site to manage your own comic book collection and explore comics owned by other avid collectors.
+      {{if not auth.user:}}
+        Registration takes less than a minute and is completely free, so what are you waiting for?
+      {{pass}}
     </p>
 
-    <p>
-      <a href="{{=URL('default', 'user', args=['register'])}}" class="btn btn-primary btn-lg">
-        Create an account
-      </a>
+    {{if not auth.user:}}
+      <p>
+        <a href="{{=URL('default', 'user', args=['register'])}}" class="btn btn-primary btn-lg">
+          Create an account
+        </a>
 
-      <a href="{{=URL('default', 'user', args=['login'])}}" class="btn btn-default">
-        Login
-      </a>
-    </p>
+        <a href="{{=URL('default', 'user', args=['login'])}}" class="btn btn-default">
+          Login
+        </a>
+      </p>
+    {{pass}}
   </div>
 </header>
 
