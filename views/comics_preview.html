@@ -35,6 +35,13 @@
             View <em>{{=box.owner.screen_name}}</em>'s collection...
           </a>
         {{pass}}
+
+        {{if 'box' in response._vars and auth.user and box.owner.id == auth.user.id and box.name != 'Unfiled':}}
+          <a class="list-group-item" href="{{=URL('box', 'remove_comic', args=[box.id, comic.id])}}">
+            <span class="glyphicon glyphicon-trash"></span>
+            Remove from box
+          </a>
+        {{pass}}
         </ul>
       </div>
     </div>
