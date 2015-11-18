@@ -144,7 +144,7 @@ def view():
 
 
 def search():
-    search = request.get_vars['search']
+    search = request.get_vars.get('search', '')
 
     user_id = auth.user.id if auth.is_logged_in() else 0
 

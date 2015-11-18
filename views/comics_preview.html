@@ -27,12 +27,12 @@
             More information...
           </a>
 
-        {{collection_view_url = URL('collection', 'view', args=[box.owner.id])}}
+        {{collection_view_url = URL('collection', 'view', args=[comic.owner.id])}}
 
         {{if collection_view_url not in request.url:}}
           <a class="list-group-item" href="{{=collection_view_url}}">
             <span class="glyphicon glyphicon-user"></span>
-            View <em>{{=box.owner.screen_name}}</em>'s collection...
+            View <em>{{=comic.owner.screen_name}}</em>'s collection...
           </a>
         {{pass}}
 
