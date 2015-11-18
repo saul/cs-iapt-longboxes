@@ -82,8 +82,8 @@ def delete():
 
 @auth.requires_login()
 def add_comic():
-    target_box = get_or_404(db.box, request.args(0), owner=auth.user.id)
-    source_comic = get_or_404(db.comic, request.args(1))
+    target_box = get_or_404(db.box, request.post_vars['box'], owner=auth.user.id)
+    source_comic = get_or_404(db.comic, request.post_vars['comic'])
 
     # Is the comic already in the box we want to add it to?
     if db.comicbox((db.comicbox.box == target_box.id) & (db.comicbox.comic == source_comic.id)):
@@ -104,6 +104,10 @@ def add_comic():
 
         for comicartist in source_comic.comicartist.select():
             db.comicartist.insert(artist=comicartist.artist, comic=target_comic_id)
+
+    elif target_box.name == 'Unfiled':
+        return flash_and_redirect_back('This comic cannot be added to "Unfiled" as it is already belongs to a box.')
+
     else:
         target_comic_id = source_comic.id
 

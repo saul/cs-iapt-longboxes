@@ -27,13 +27,45 @@
     </a>
   {{pass}}
 
-    <a class="btn btn-success" href="#">
+    <button class="btn btn-success" data-toggle="modal" data-target="#add_to_box_modal">
       <span class="glyphicon glyphicon-plus-sign"></span>
       Add to box
-    </a>
+    </button>
   </div>
-
 </div>
+
+{{if available_boxes:}}
+  <div class="modal fade" id="add_to_box_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Add to box</h4>
+        </div>
+
+        <form action="{{=URL('box', 'add_comic')}}" method="post">
+          <input type="hidden" name="comic" value="{{=comic.id}}">
+
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="comic">Box</label>
+              <select class="form-control" name="box">
+                {{for box in available_boxes:}}
+                  <option value="{{=box.id}}">{{=box.name}}</option>
+                {{pass}}
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add to box</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{{pass}}
 {{end}}
 
 {{block sidebar}}

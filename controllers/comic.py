@@ -130,11 +130,14 @@ def view():
     if not comic_helpers.user_can_view(db, comic.id, user_id):
         raise HTTP(404)
 
+    available_boxes = db(db.box.owner == user_id).select()
+
     return {
         'comic': comic,
         'boxes': db(db.comicbox.comic == comic.id)(db.box.id == db.comicbox.box)((db.box.private == False) | (db.box.owner == user_id)).select(db.box.ALL),
         'artists': db(db.comicartist.comic == comic.id)(db.artist.id == db.comicartist.artist).select(db.artist.ALL),
         'writers': db(db.comicwriter.comic == comic.id)(db.writer.id == db.comicwriter.writer).select(db.writer.ALL),
         'owner': db(db.comicbox.comic == comic.id)(db.box.id == db.comicbox.box)(db.auth_user.id == db.box.owner).select(db.auth_user.ALL).first(),
-        'can_edit': comic_helpers.user_can_edit(db, comic.id, user_id)
+        'can_edit': comic_helpers.user_can_edit(db, comic.id, user_id),
+        'available_boxes': available_boxes
     }
