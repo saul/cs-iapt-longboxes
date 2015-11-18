@@ -43,8 +43,7 @@ def create():
         response.flash = 'Form has errors'
 
     return {
-        'form': form,
-        'owner': form.vars.owner
+        'form': form
     }
 
 

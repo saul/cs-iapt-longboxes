@@ -1,7 +1,7 @@
 {{extend 'longboxes_singlecol.html'}}
 
 {{block breadcrumbs}}
-<li><a href="{{=URL('collection', 'view', args=[owner.id])}}">{{=owner.screen_name}}</a></li>
+<li><a href="{{=URL('collection', 'view', args=[auth.user.id])}}">{{=auth.user.screen_name}}</a></li>
 <li class="active">New Box</li>
 {{end}}
 
