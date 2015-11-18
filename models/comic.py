@@ -20,11 +20,6 @@ db.define_table('comic',
                 Field('cover_image', 'upload', required=True, notnull=True, requires=[IS_IMAGE()], uploadfolder='uploads/'),
                 )
 
-db.comic.owner = Field.Virtual(
-    'owner',
-    lambda row: db(db.comicbox.comic == row.id)(db.box.id == db.comicbox.box)(db.auth_user.id == db.box.owner).select(db.auth_user.ALL).first()
-)
-
 db.define_table('comicbox',
                 Field('box', db.box, required=True, notnull=True),
                 Field('comic', db.comic, required=True, notnull=True))
