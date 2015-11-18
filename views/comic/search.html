@@ -1,0 +1,12 @@
+{{extend 'longboxes_singlecol.html'}}
+
+{{block breadcrumbs}}
+<li class="active">Search: <em>{{=search}}</em></li>
+{{end}}
+
+{{block body}}
+<h2>Search results</h2>
+<p class="lead">{{=search}}</p>
+
+{{include 'comics_preview.html'}}
+{{end}}

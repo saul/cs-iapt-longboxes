@@ -141,3 +141,31 @@ def view():
         'can_edit': comic_helpers.user_can_edit(db, comic.id, user_id),
         'available_boxes': available_boxes
     }
+
+
+def search():
+    search = request.get_vars['search']
+
+    user_id = auth.user.id if auth.is_logged_in() else 0
+
+    # generate a base query which finds all comics that the logged in user has permission to see
+    base_query = db(db.comic.id == db.comicbox.comic)(db.comicbox.box == db.box.id)((db.box.private == False) | (db.box.owner == user_id))
+
+    def fuzzy_like(field):
+        return field.like('%{0}%'.format(search))
+
+    queries = [
+        base_query(fuzzy_like(db.comic.title)),
+        base_query(db.publisher.id == db.comic.publisher)(fuzzy_like(db.publisher.name)),
+        base_query(db.comicwriter.comic == db.comic.id)(db.writer.id == db.comicwriter.writer)(fuzzy_like(db.writer.name)),
+        base_query(db.comicartist.comic == db.comic.id)(db.artist.id == db.comicartist.artist)(fuzzy_like(db.artist.name)),
+    ]
+
+    query_results = map(lambda q: q.select(db.comic.ALL), queries)
+
+    comics = reduce(lambda c, q: c | q, query_results)
+
+    return {
+        'search': search,
+        'comics': comics
+    }

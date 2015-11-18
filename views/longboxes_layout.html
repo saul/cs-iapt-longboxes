@@ -55,9 +55,9 @@
             {{=auth.navbar('Hi', mode='dropdown', referrer_actions=None)}}
           </ul>
 
-          <form class="navbar-form navbar-right" role="search">
+          <form class="navbar-form navbar-right" role="search" action="{{=URL('comic', 'search')}}" method="get">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search comics">
+              <input type="text" class="form-control" placeholder="Search comics" name="search">
             </div>
 
             <button class="btn btn-inverse" type="submit">
