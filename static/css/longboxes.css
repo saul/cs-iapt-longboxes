@@ -11,21 +11,25 @@ main > h2:first-child {
 .comic-cover {
   max-width: 100%;
 }
+.comic-cover-list-group-item {
+  padding: 0;
+}
 .comic-cover-container {
   display: inline-block;
-  position: relative;
   width: 100%;
-  padding: 0;
 }
 .comic-cover-container::after {
   content: '';
   display: block;
   margin-top: 75%;
+  /* ensure container height is always 1/4 shorter than it is wide, i.e. 4:3 ratio */
 }
 .comic-cover-background {
   position: absolute;
   background: no-repeat center;
   background-size: cover;
+  /* ensure background image always fills the space, no letterboxing */
+  background-position: top center;
   top: 0;
   bottom: 0;
   left: 0;
