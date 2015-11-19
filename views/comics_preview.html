@@ -29,9 +29,9 @@
 
         <ul class="list-group">
           <li class="list-group-item comic-cover-list-group-item">
-            <div class="comic-cover-container">
+            <a class="comic-cover-container" href="{{=comic.url}}">
               <div class="comic-cover-background" style="background-image: url({{=URL('default', 'download', args=[comic.cover_image])}})"></div>
-            </div>
+            </a>
           </li>
 
           <a class="list-group-item" href="{{=comic.url}}">
@@ -49,10 +49,15 @@
         {{pass}}
 
         {{if 'box' in response._vars and auth.user and box.owner.id == auth.user.id and not box.is_unfiled:}}
-          <a class="list-group-item" href="{{=URL('box', 'remove_comic', args=[box.id, comic.id])}}">
+        <form action="{{=URL('box', 'remove_comic')}}" method="post">
+          <input type="hidden" name="box" value="{{=box.id}}">
+          <input type="hidden" name="comic" value="{{=comic.id}}">
+
+          <button class="list-group-item" type="submit">
             <span class="glyphicon glyphicon-trash"></span>
             Remove from box
-          </a>
+          </button>
+        </form>
         {{pass}}
         </ul>
       </div>

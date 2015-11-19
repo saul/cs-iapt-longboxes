@@ -48,12 +48,29 @@
 
           <div class="modal-body">
             <div class="form-group">
-              <label for="comic">Box</label>
-              <select class="form-control" name="box">
-              {{for box in available_boxes:}}
-                  <option value="{{=box.id}}">{{=box.name}}</option>
-              {{pass}}
+              <label for="box">Box</label>
+
+              <select class="form-control" name="box" id="new_box_select">
+                <option value="new">(Create new)</option>
+
+                {{for box in available_boxes:}}
+                  <option value="{{=box.id}}" {{if box.is_unfiled:}}selected{{pass}}>
+                    {{=box.name}}
+                  </option>
+                {{pass}}
               </select>
+            </div>
+
+            <div id="new_box_group" class="form-group hidden">
+              <label for="name">New box name</label>
+              <input type="hidden" class="form-control" name="name" required>
+
+              <div class="checkbox">
+                <label>
+                  <input name="private" type="checkbox">
+                  Private
+                </label>
+              </div>
             </div>
           </div>
 
@@ -97,20 +114,28 @@
 
   <ul class="list-group">
   {{for box in boxes:}}
-    <li class="list-group-item">
-      <a href="{{=box.url}}">
-        <span class="glyphicon glyphicon-th"></span>
-        {{=box.name}}
-      </a>
+    <form action="{{=URL('box', 'remove_comic')}}" method="post">
+      <input type="hidden" name="box" value="{{=box.id}}">
+      <input type="hidden" name="comic" value="{{=comic.id}}">
 
-      {{if can_edit and not box.is_unfiled:}}
-        <div class="pull-right">
-          <a class="btn btn-xs btn-danger" href="{{=URL('box', 'remove_comic', args=[box.id, comic.id])}}" title="Remove comic from box">
+      <a class="list-group-item" href="{{=box.url}}">
+        {{if box.private:}}
+          <span class="glyphicon glyphicon-lock"></span>
+        {{else:}}
+          <span class="glyphicon glyphicon-th"></span>
+        {{pass}}
+
+        {{=box.name}}
+
+        <span class="label label-default">{{=box.comic_count}}</span>
+
+        {{if can_edit and not box.is_unfiled:}}
+          <button type="submit" class="close" title="Remove comic from box">
             &times;
-          </a>
-        </div>
-      {{pass}}
-    </li>
+          </button>
+        {{pass}}
+      </a>
+    </form>
   {{pass}}
 
     <a class="list-group-item" href="{{=URL('collection', 'view', args=[owner.id])}}">
@@ -128,4 +153,8 @@
 <p class="lead">
 {{=comic.description}}
 </p>
+{{end}}
+
+{{block page_js}}
+<script src="{{=URL('static','js/new_box_form.js')}}"></script>
 {{end}}

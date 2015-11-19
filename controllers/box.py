@@ -1,4 +1,4 @@
-from helpers import flash_and_redirect_back, get_or_404
+from helpers import flash_and_redirect_back, get_or_404, get_or_create
 
 
 def view():
@@ -81,7 +81,18 @@ def delete():
 
 @auth.requires_login()
 def add_comic():
-    target_box = get_or_404(db.box, request.post_vars['box'], owner=auth.user.id)
+    if request.post_vars['box'] == 'new':
+        target_box = db.box(name=request.post_vars['name'], owner=auth.user.id)
+        private = bool(request.post_vars['private'])
+
+        if target_box:
+            target_box.update(private=private)
+        else:
+            target_box_id = db.box.insert(name=request.post_vars['name'], owner=auth.user.id, private=private)
+            target_box = db.box[target_box_id]
+    else:
+        target_box = get_or_404(db.box, request.post_vars['box'], owner=auth.user.id)
+
     source_comic = get_or_404(db.comic, request.post_vars['comic'])
 
     # Is the comic already in the box we want to add it to?
@@ -123,8 +134,8 @@ def add_comic():
 
 @auth.requires_login()
 def remove_comic():
-    box = get_or_404(db.box, request.args(0), owner=auth.user.id)
-    comic = get_or_404(db.comic, request.args(1))
+    box = get_or_404(db.box, request.post_vars['box'], owner=auth.user.id)
+    comic = get_or_404(db.comic, request.post_vars['comic'])
 
     if box.is_unfiled:
         flash_and_redirect_back('A comic cannot be removed from the Unfiled box.')
