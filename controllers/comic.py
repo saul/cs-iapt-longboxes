@@ -77,6 +77,10 @@ class ComicForm:
 def create():
     form = ComicForm()
 
+    # Pre-select the box that the user wants to add to
+    if not form.form.vars.box and request.get_vars['box']:
+        form.form.vars.box = get_or_404(db.box, request.get_vars['box'], owner=auth.user.id).id
+
     if form.process().accepted:
         session.flash = 'Created comic'
         redirect(URL('comic', 'view', args=[form.id]))

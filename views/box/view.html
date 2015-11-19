@@ -44,6 +44,11 @@
       <span class="glyphicon glyphicon-lock"></span>
       Make {{=toggled_privacy}}
     </a>
+
+    <a class="btn btn-success" href="{{=URL('comic', 'create', vars={'box': box.id})}}">
+      <span class="glyphicon glyphicon-plus"></span>
+      Add new comic
+    </a>
   </div>
   {{pass}}
 </div>
