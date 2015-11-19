@@ -1,4 +1,4 @@
-from helpers import flash_and_redirect_back, get_or_404, get_or_create
+from helpers import flash_and_redirect_back, get_or_404, add_element_required_attr
 
 
 def view():
@@ -11,7 +11,8 @@ def view():
     can_edit = user_owned and box.name != 'Unfiled'
 
     if can_edit:
-        rename_form = SQLFORM(db.box, box, formstyle='bootstrap3_inline', fields=['name'], showid=False)
+        rename_form = SQLFORM(db.box, box, fields=['name'], showid=False)
+        add_element_required_attr(db.box, rename_form)
 
         if rename_form.process().accepted:
             session.flash = 'Box renamed successfully'
@@ -33,7 +34,9 @@ def view():
 
 @auth.requires_login()
 def create():
-    form = SQLFORM(db.box, formstyle='bootstrap3_inline', fields=['name', 'private'])
+    form = SQLFORM(db.box, fields=['name', 'private'])
+    add_element_required_attr(db.box, form)
+
     form.vars.owner = auth.user
 
     if form.process().accepted:

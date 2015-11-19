@@ -1,6 +1,6 @@
 from gluon.globals import current
-from gluon.http import redirect, HTTP
 from gluon.html import URL
+from gluon.http import redirect, HTTP
 
 
 def flash_and_redirect_back(flash, default=URL('default', 'index'), avoid=None):
@@ -26,3 +26,8 @@ def get_or_create(model, **fields):
     if record:
         return record.id
     return model.insert(**fields)
+
+
+def add_element_required_attr(model, form):
+    for field in filter(lambda x: x.required, model):
+        form.element(_name=field.name)['_required'] = 'required'

@@ -1,4 +1,4 @@
-from helpers import flash_and_redirect_back, get_or_create, get_or_404
+from helpers import flash_and_redirect_back, get_or_create, get_or_404, add_element_required_attr
 import comic_helpers
 
 
@@ -31,10 +31,11 @@ class ComicForm:
         self.form = SQLFORM.factory(
             *fields,
             record=record,
-            formstyle='bootstrap3_inline',
             table_name='comic',
             showid=False
         )
+
+        add_element_required_attr(db.comic, self.form)
 
     def _on_success(self, form):
         # Create the publisher if it doesn't exist already
