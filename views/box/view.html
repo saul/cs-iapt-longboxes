@@ -18,6 +18,10 @@
       <a href="{{=URL('collection', 'view', args=[box.owner.id])}}">
         {{=box.owner.screen_name}}
       </a>
+
+      created
+      {{from gluon.tools import prettydate}}
+      <span title="{{=box.created}}">{{=prettydate(box.created, T)}}</span>
     </small>
   </h2>
 
