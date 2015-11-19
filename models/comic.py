@@ -17,7 +17,7 @@ db.define_table('comic',
                 Field('title', required=True, notnull=True, requires=IS_NOT_EMPTY()),
                 Field('issue', 'integer', required=True, notnull=True, requires=IS_INT_IN_RANGE(1, 1e100), default=1),
                 Field('description', 'text', required=True, notnull=True, requires=[IS_FEWER_WORDS(300), IS_NOT_EMPTY()]),
-                Field('cover_image', 'upload', required=True, notnull=True, requires=[IS_IMAGE(maxsize=(400, 300))], uploadfolder='uploads/')
+                Field('cover_image', 'upload', required=True, notnull=True, requires=[IS_IMAGE(maxsize=(400, 300))])
                 )
 
 
