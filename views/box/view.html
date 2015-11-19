@@ -42,7 +42,7 @@
     {{toggled_privacy = 'public' if box.private else 'private'}}
     <a class="btn btn-default" href="{{=URL('box', 'set_privacy', args=[box.id], vars={'privacy': toggled_privacy})}}">
       <span class="glyphicon glyphicon-lock"></span>
-      Make {{=toggled_privacy.capitalize()}}
+      Make {{=toggled_privacy}}
     </a>
   </div>
   {{pass}}
