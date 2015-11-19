@@ -1,6 +1,11 @@
 from helpers import flash_and_redirect_back, get_or_404, add_element_required_attr
 
 
+def _validate_box_form(form):
+    if not db(db.box.owner == auth.user.id)(db.box.name == form.vars.name).isempty():
+        form.errors.name = 'Box already exists'
+
+
 def view():
     user_id = auth.user.id if auth.is_logged_in() else 0
     box = get_or_404(db.box, ((db.box.id == request.args(0)) & ((db.box.owner == user_id) | (db.box.private == False))))
@@ -14,7 +19,7 @@ def view():
         rename_form = SQLFORM(db.box, box, fields=['name'], showid=False)
         add_element_required_attr(db.box, rename_form)
 
-        if rename_form.process().accepted:
+        if rename_form.process(onvalidation=_validate_box_form).accepted:
             session.flash = 'Box renamed successfully'
             redirect(request.env['PATH_INFO'])
 
@@ -34,16 +39,12 @@ def view():
 
 @auth.requires_login()
 def create():
-    def validate(form):
-        if not db(db.box.owner == auth.user.id)(db.box.name == form.vars.name).isempty():
-            form.errors.name = 'Box already exists'
-
     form = SQLFORM(db.box, fields=['name', 'private'])
     add_element_required_attr(db.box, form)
 
     form.vars.owner = auth.user
 
-    if form.process(onvalidation=validate).accepted:
+    if form.process(onvalidation=_validate_box_form).accepted:
         session.flash = 'Created box'
         redirect(URL('box', 'view', args=[form.vars.id]))
     elif form.errors:

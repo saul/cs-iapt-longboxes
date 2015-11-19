@@ -6,10 +6,19 @@
  * document load.
  */
 
-$(function() {
-  $('.error_wrapper').each(function() {
-    var $this = $(this);
-    $this.addClass('help-block');
-    $this.parents('.form-group').addClass('has-error');
+(function() {
+  'use strict';
+
+  $(function() {
+    $('.error_wrapper').each(function() {
+      var $this = $(this);
+      $this.addClass('help-block');
+      $this.parents('.form-group').addClass('has-error');
+
+      var $modalParent = $this.parents('.modal');
+      if ($modalParent.length) {
+        $modalParent.modal('show');
+      }
+    });
   });
-});
+})();
