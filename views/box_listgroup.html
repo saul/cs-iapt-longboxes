@@ -1,0 +1,21 @@
+{{for box in boxes:}}
+  <a class="list-group-item" href="{{=box.url}}">
+    {{if box.private:}}
+      <span class="glyphicon glyphicon-lock"></span>
+    {{else:}}
+      <span class="glyphicon glyphicon-th"></span>
+    {{pass}}
+
+    {{=box.name}}
+
+    <span class="text-muted">by {{=box.owner.screen_name}}</span>
+
+    <span class="label label-default">{{=box.comic_count}}</span>
+  </a>
+{{pass}}
+
+{{if not boxes:}}
+  <li class="list-group-item text-muted">
+    No boxes to display
+  </li>
+{{pass}}

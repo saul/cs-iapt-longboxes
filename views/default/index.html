@@ -35,14 +35,8 @@
     <h2>Largest boxes</h2>
 
     <ul class="list-group">
-    {{for box in largest:}}
-      <a class="list-group-item" href="{{=URL('box', 'view', args=[box.id])}}">
-        <span class="glyphicon glyphicon-th"></span>
-        {{=box.name}}
-
-        <span class="text-muted">by {{=box.owner.screen_name}}</span>
-      </a>
-    {{pass}}
+      {{boxes = largest}}
+      {{include 'box_listgroup.html'}}
     </ul>
   </div>
 
@@ -50,14 +44,8 @@
     <h2>Recently created boxes</h2>
 
     <ul class="list-group">
-    {{for box in recent:}}
-      <a class="list-group-item" href="{{=URL('box', 'view', args=[box.id])}}">
-        <span class="glyphicon glyphicon-th"></span>
-        {{=box.name}}
-
-        <span class="text-muted">by {{=box.owner.screen_name}}</span>
-      </a>
-    {{pass}}
+      {{boxes = recent}}
+      {{include 'box_listgroup.html'}}
     </ul>
   </div>
 </div>

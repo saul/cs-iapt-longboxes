@@ -25,6 +25,13 @@ class ComicVirtualFields:
     def owner(self):
         return db(db.comicbox.comic == self.comic.id)(db.box.id == db.comicbox.box)(db.auth_user.id == db.box.owner).select(db.auth_user.ALL).first()
 
+    def boxes(self):
+        user_id = auth.user.id if auth.user else 0
+        return db(db.comicbox.comic == self.comic.id)(db.box.id == db.comicbox.box)((db.box.private == False) | (db.box.owner == user_id)).select(db.box.ALL)
+
+    def url(self):
+        return URL('comic', 'view', args=[self.comic.id])
+
 
 db.comic.virtualfields.append(ComicVirtualFields())
 

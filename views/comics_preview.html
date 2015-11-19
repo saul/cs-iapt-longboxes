@@ -13,6 +13,18 @@
           {{=comic.title}}<br />
             <span class="text-muted">(issue {{=comic.issue}})</span>
           </h4>
+
+          {{for box in comic.boxes:}}
+            <a href="{{=box.url}}" class="nodecoration">
+              <span class="label label-{{='default' if box.private else 'info'}}">
+                {{if box.private:}}
+                  <span class="glyphicon glyphicon-lock"></span>
+                {{pass}}
+
+                {{=box.name}}
+              </span>
+            </a>
+          {{pass}}
         </div>
 
         <ul class="list-group">
@@ -22,7 +34,7 @@
             </div>
           </li>
 
-          <a class="list-group-item" href="{{=URL('comic', 'view', args=[comic.id])}}">
+          <a class="list-group-item" href="{{=comic.url}}">
             <span class="glyphicon glyphicon-expand"></span>
             More information...
           </a>
@@ -36,7 +48,7 @@
           </a>
         {{pass}}
 
-        {{if 'box' in response._vars and auth.user and box.owner.id == auth.user.id and box.name != 'Unfiled':}}
+        {{if 'box' in response._vars and auth.user and box.owner.id == auth.user.id and not box.is_unfiled:}}
           <a class="list-group-item" href="{{=URL('box', 'remove_comic', args=[box.id, comic.id])}}">
             <span class="glyphicon glyphicon-trash"></span>
             Remove from box

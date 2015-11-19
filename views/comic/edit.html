@@ -2,7 +2,7 @@
 
 {{block breadcrumbs}}
 <li><a href="{{=URL('collection', 'view', args=[owner.id])}}">{{=owner.screen_name}}</a></li>
-<li><a href="{{=URL('comic', 'view', args=[comic.id])}}">Comic: {{=comic.title}}</a></li>
+<li><a href="{{=comic.url}}">Comic: {{=comic.title}}</a></li>
 <li class="active">Edit</li>
 {{end}}
 

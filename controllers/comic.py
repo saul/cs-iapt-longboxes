@@ -111,7 +111,7 @@ def edit():
 
     if form.process().accepted:
         session.flash = 'Comic updated successfully'
-        redirect(URL('comic', 'view', args=[form.id]))
+        redirect(comic.url)
     elif form.form.errors:
         response.flash = 'Form has errors'
 

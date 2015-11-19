@@ -12,6 +12,12 @@ class BoxVirtualFields:
     def is_unfiled(self):
         return self.box.name == 'Unfiled'
 
+    def comic_count(self):
+        return db(db.comicbox.comic == db.comic.id)(db.comicbox.box == self.box.id).count()
+
+    def url(self):
+        return URL('box', 'view', args=[self.box.id])
+
 
 db.box.virtualfields.append(BoxVirtualFields())
 

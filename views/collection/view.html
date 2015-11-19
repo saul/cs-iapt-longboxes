@@ -15,19 +15,14 @@
   </div>
 
   <ul class="list-group">
-  {{for box in boxes:}}
-    <a class="list-group-item" href="{{=URL('box', 'view', args=[box.id])}}">
-      <span class="glyphicon glyphicon-th"></span>
-      {{=box.name}}
-    </a>
-  {{pass}}
+    {{include 'box_listgroup.html'}}
 
-  {{if user_owned:}}
-    <a class="list-group-item list-group-item-success" href="{{=URL('box', 'create')}}">
-      <span class="glyphicon glyphicon-plus"></span>
-      New box
-    </a>
-  {{pass}}
+    {{if user_owned:}}
+      <a class="list-group-item list-group-item-success" href="{{=URL('box', 'create')}}">
+        <span class="glyphicon glyphicon-plus"></span>
+        New box
+      </a>
+    {{pass}}
   </ul>
 </div>
 {{end}}

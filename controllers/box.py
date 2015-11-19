@@ -51,9 +51,9 @@ def create():
 def delete():
     box = get_or_404(db.box, request.args(0), owner=auth.user.id)
 
-    if box.name == 'Unfiled':
+    if box.is_unfiled:
         session.flash = 'You cannot delete the Unfiled box.'
-        redirect(URL('box', 'view', args=[box.id]))
+        redirect(box.url)
 
     # Find the Unfiled box for this user
     unfiled_box = db.box((db.box.name == 'Unfiled') & (db.box.owner == auth.user.id))
@@ -104,7 +104,7 @@ def add_comic():
         for comicartist in source_comic.comicartist.select():
             db.comicartist.insert(artist=comicartist.artist, comic=target_comic_id)
 
-    elif target_box.name == 'Unfiled':
+    elif target_box.is_unfiled:
         return flash_and_redirect_back('This comic cannot be added to "Unfiled" as it is already belongs to a box.')
 
     else:
@@ -118,7 +118,7 @@ def add_comic():
     db((db.comicbox.comic == target_comic_id) & (db.comicbox.box == unfiled_box.id)).delete()
 
     session.flash = 'Added comic to box.'
-    redirect(URL('box', 'view', args=[target_box.id]))
+    redirect(target_box.url)
 
 
 @auth.requires_login()
@@ -126,7 +126,7 @@ def remove_comic():
     box = get_or_404(db.box, request.args(0), owner=auth.user.id)
     comic = get_or_404(db.comic, request.args(1))
 
-    if box.name == 'Unfiled':
+    if box.is_unfiled:
         flash_and_redirect_back('A comic cannot be removed from the Unfiled box.')
 
     db(db.comicbox.box == box.id, db.comicbox.comic == comic.id).delete()

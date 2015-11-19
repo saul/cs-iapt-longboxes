@@ -98,12 +98,12 @@
   <ul class="list-group">
   {{for box in boxes:}}
     <li class="list-group-item">
-      <a href="{{=URL('box', 'view', args=[box.id])}}">
+      <a href="{{=box.url}}">
         <span class="glyphicon glyphicon-th"></span>
         {{=box.name}}
       </a>
 
-      {{if can_edit and box.name != 'Unfiled':}}
+      {{if can_edit and not box.is_unfiled:}}
         <div class="pull-right">
           <a class="btn btn-xs btn-danger" href="{{=URL('box', 'remove_comic', args=[box.id, comic.id])}}" title="Remove comic from box">
             &times;
