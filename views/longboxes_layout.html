@@ -57,7 +57,7 @@
 
           <form class="navbar-form navbar-right" role="search" action="{{=URL('comic', 'search')}}" method="get">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search comics" name="search">
+              <input type="text" class="form-control" placeholder="Search comics" name="search" value="{{=request.get_vars['search'] or ''}}">
             </div>
 
             <button class="btn btn-inverse" type="submit">
