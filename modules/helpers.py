@@ -29,5 +29,8 @@ def get_or_create(model, **fields):
 
 
 def add_element_required_attr(model, form):
-    for field in filter(lambda x: x.required, model):
-        form.element(_name=field.name)['_required'] = 'required'
+    required_fields = filter(lambda x: x.required, model)
+    elements = map(lambda f: form.element(_name=f.name), required_fields)
+
+    for element in filter(bool, elements):
+        element['_required'] = 'required'
