@@ -1,5 +1,6 @@
 from gluon.validators import Validator
 
+
 class IS_FEWER_WORDS(Validator):
     def __init__(self, max_words,
                  error_message='Must be fewer than %(max_words)d words'):

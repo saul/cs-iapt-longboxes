@@ -34,12 +34,16 @@ def view():
 
 @auth.requires_login()
 def create():
+    def validate(form):
+        if not db(db.box.owner == auth.user.id)(db.box.name == form.vars.name).isempty():
+            form.errors.name = 'Box already exists'
+
     form = SQLFORM(db.box, fields=['name', 'private'])
     add_element_required_attr(db.box, form)
 
     form.vars.owner = auth.user
 
-    if form.process().accepted:
+    if form.process(onvalidation=validate).accepted:
         session.flash = 'Created box'
         redirect(URL('box', 'view', args=[form.vars.id]))
     elif form.errors:
