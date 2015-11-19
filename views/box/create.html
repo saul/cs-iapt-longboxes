@@ -1,12 +1,14 @@
 {{extend 'longboxes_singlecol.html'}}
 
+{{block title}}New Box{{end}}
+
 {{block breadcrumbs}}
 <li><a href="{{=URL('collection', 'view', args=[auth.user.id])}}">{{=auth.user.screen_name}}</a></li>
 <li class="active">New Box</li>
 {{end}}
 
 {{block body}}
-<h2>New box</h2>
+<h2>New Box</h2>
 
 {{=form}}
 {{end}}

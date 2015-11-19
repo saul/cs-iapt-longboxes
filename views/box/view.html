@@ -1,5 +1,7 @@
 {{extend 'longboxes_singlecol.html'}}
 
+{{block title}}Box: {{=box.name}}{{end}}
+
 {{block breadcrumbs}}
 <li><a href="{{=URL('collection', 'view', args=[box.owner.id])}}">{{=box.owner.screen_name}}</a></li>
 <li class="active">Box: {{=box.name}}</li>

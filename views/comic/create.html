@@ -1,12 +1,14 @@
 {{extend 'longboxes_singlecol.html'}}
 
+{{block title}}New Comic{{end}}
+
 {{block breadcrumbs}}
 <li><a href="{{=URL('collection', 'view', args=[owner.id])}}">{{=owner.screen_name}}</a></li>
 <li class="active">New Comic</li>
 {{end}}
 
 {{block body}}
-<h2>New comic</h2>
+<h2>New Comic</h2>
 
 {{=form}}
 {{end}}

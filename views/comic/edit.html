@@ -1,5 +1,7 @@
 {{extend 'longboxes_singlecol.html'}}
 
+{{block title}}Edit {{=comic.title}}{{end}}
+
 {{block breadcrumbs}}
 <li><a href="{{=URL('collection', 'view', args=[owner.id])}}">{{=owner.screen_name}}</a></li>
 <li><a href="{{=comic.url}}">Comic: {{=comic.title}}</a></li>

@@ -1,5 +1,7 @@
 {{extend 'longboxes_sidebar.html'}}
 
+{{block title}}{{=user.screen_name}}{{end}}
+
 {{block breadcrumbs}}
 <li class="active">{{=user.screen_name}}</li>
 {{end}}
