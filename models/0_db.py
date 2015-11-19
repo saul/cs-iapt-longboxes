@@ -36,11 +36,15 @@ plugins = PluginManager()
 auth.settings.login_next = URL('collection', 'view')
 
 auth.settings.extra_fields['auth_user'] = [
-  Field('screen_name', required=True, unique=True)
+    Field('screen_name', required=True, unique=True)
 ]
 
 ## create all tables needed by auth if not custom tables
 auth.define_tables(username=True, signature=False)
+
+# Disable the first and last name fields
+db.auth_user.first_name.readable = db.auth_user.first_name.writable = False
+db.auth_user.last_name.readable = db.auth_user.last_name.writable = False
 
 ## configure email
 mail = auth.settings.mailer
