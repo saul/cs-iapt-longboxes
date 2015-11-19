@@ -83,7 +83,7 @@ def delete():
     box.delete_record()
 
     session.flash = 'Box deleted'
-    redirect(URL('collection', 'view'))
+    redirect(URL('collection', 'view', args=[auth.user.id]))
 
 
 @auth.requires_login()

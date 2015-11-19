@@ -101,7 +101,7 @@ def delete():
         flash_and_redirect_back('You cannot delete a comic you did not create.')
 
     comic.delete_record()
-    flash_and_redirect_back('Comic deleted', default=URL('collection', 'view'), avoid='/comic/view')
+    flash_and_redirect_back('Comic deleted', default=URL('collection', 'view', args=[auth.user.id]), avoid='/comic/view')
 
 
 @auth.requires_login()
