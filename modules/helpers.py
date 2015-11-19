@@ -1,4 +1,5 @@
 from gluon.globals import current
+from gluon.validators import IS_NOT_EMPTY
 from gluon.html import URL
 from gluon.http import redirect, HTTP
 
@@ -29,7 +30,17 @@ def get_or_create(model, **fields):
 
 
 def add_element_required_attr(model, form):
-    required_fields = filter(lambda x: x.required, model)
+    def is_not_empty(field):
+        if isinstance(field.requires, (list, tuple)):
+            requires = field.requires
+        else:
+            requires = [field.requires]
+
+        for validator in requires:
+            if isinstance(validator, IS_NOT_EMPTY):
+                return True
+
+    required_fields = filter(is_not_empty, model)
     elements = map(lambda f: form.element(_name=f.name), required_fields)
 
     for element in filter(bool, elements):
