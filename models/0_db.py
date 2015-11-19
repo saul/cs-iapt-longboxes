@@ -11,11 +11,7 @@ from gluon.contrib.appconfig import AppConfig
 ## once in production, remove reload=True to gain full speed
 myconf = AppConfig(reload=True)
 
-
-if 'UNITTEST' in os.environ:
-    db = DAL('sqlite:memory:')
-else:
-    db = DAL(myconf.take('db.uri'), pool_size=myconf.take('db.pool_size', cast=int))
+db = DAL(myconf.take('db.uri'), pool_size=myconf.take('db.pool_size', cast=int))
 
 ## by default give a view/generic.extension to all actions from localhost
 ## none otherwise. a pattern can be 'controller/function.extension'
