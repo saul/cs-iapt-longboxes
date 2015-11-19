@@ -1,20 +1,15 @@
 {{extend 'longboxes_sidebar.html'}}
 
-{{block title}}Comic: {{=comic.title}}{{end}}
+{{block title}}Comic: {{=comic.full_name}}{{end}}
 
 {{block breadcrumbs}}
 <li><a href="{{=URL('collection', 'view', args=[owner.id])}}">{{=owner.screen_name}}</a></li>
-<li class="active">Comic: {{=comic.title}}</li>
+<li class="active">Comic: {{=comic.full_name}}</li>
 {{end}}
 
 {{block pre_body}}
 <div class="header-actions">
-  <h2>
-  {{=comic.title}}
-    <small class="text-muted">
-      (issue {{=comic.issue}})
-    </small>
-  </h2>
+  <h2>{{=comic.full_name}}</h2>
 
   <div class="btn-group" role="group">
   {{if can_edit:}}
@@ -152,9 +147,7 @@
 <img class="comic-cover" src="{{=URL('default', 'download', args=[comic.cover_image])}}">
 
 <h3>Description</h3>
-<p class="lead">
-{{=comic.description}}
-</p>
+<p class="comic-desc">{{=comic.description}}</p>
 {{end}}
 
 {{block page_js}}

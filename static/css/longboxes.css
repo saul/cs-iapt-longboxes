@@ -9,6 +9,7 @@ textarea {
 }
 .label-link {
   text-decoration: none !important;
+  display: inline-block;
   margin-right: 6px;
 }
 .person-label-list {
@@ -25,6 +26,9 @@ main > h2:first-child {
   margin-top: 0;
   /* remove the margin as we already have some on the main element */
 }
+.comic-desc {
+  white-space: pre-wrap;
+}
 .comic-cover {
   max-width: 100%;
 }
@@ -38,8 +42,8 @@ main > h2:first-child {
 .comic-cover-container::after {
   content: '';
   display: block;
-  margin-top: 75%;
-  /* ensure container height is always 1/4 shorter than it is wide, i.e. 4:3 ratio */
+  margin-top: 125%;
+  /* ensure container height is always 1/4 taller than it is wide, i.e. 3:4 ratio */
 }
 .comic-cover-background {
   position: absolute;
