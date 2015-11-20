@@ -9,7 +9,14 @@
 
 {{block pre_body}}
 <div class="header-actions">
-  <h2>{{=comic.full_name}}</h2>
+  <h2>
+    {{=comic.full_name}}
+
+    <small>
+      by
+      <a href="{{=URL('collection', 'view', args=[comic.owner.id])}}">{{=comic.owner.screen_name}}</a>
+    </small>
+  </h2>
 
   <div class="btn-group" role="group">
   {{if can_edit:}}
@@ -24,10 +31,12 @@
     </a>
   {{pass}}
 
+  {{if available_boxes:}}
     <button class="btn btn-success" data-toggle="modal" data-target="#add_to_box_modal">
       <span class="glyphicon glyphicon-plus-sign"></span>
       Add to box
     </button>
+  {{pass}}
   </div>
 </div>
 
@@ -150,10 +159,11 @@
 {{end}}
 
 {{block main}}
-<img class="comic-cover" src="{{=URL('default', 'download', args=[comic.cover_image])}}">
+<div class="clearfix">
+  <img class="comic-cover" src="{{=URL('default', 'download', args=[comic.cover_image])}}">
 
-<h3>Description</h3>
-<p class="comic-desc">{{=comic.description}}</p>
+  <p class="comic-desc">{{=comic.description}}</p>
+</div>
 {{end}}
 
 {{block page_js}}

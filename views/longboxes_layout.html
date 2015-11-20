@@ -10,7 +10,9 @@
 
     <meta name="application-name" content="{{=request.application}}">
 
-    <link rel="stylesheet" href="{{=URL('static','css/bootstrap.min.css')}}"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="{{=URL('static','css/bootstrap-longboxes.css')}}"/>
 
     <link rel="stylesheet" href="{{=URL('static','css/longboxes.css')}}"/>
 
@@ -37,7 +39,9 @@
             <span class="icon-bar"></span>
           </button>
 
-          <a class="navbar-brand" href="/">Longboxes</a>
+          <a class="navbar-brand" href="/">
+            <img src="{{=URL('static','images/logo.png')}}" title="Longboxes">
+          </a>
         </div>
 
         <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -93,7 +97,7 @@
     <footer class="container">
       <hr>
       <p class="text-muted">
-        Copyright &copy; 2015 Longbox Limited
+        Copyright &copy; 2015 Longboxes Ltd.
       </p>
     </footer>
 

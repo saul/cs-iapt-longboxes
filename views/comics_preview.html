@@ -13,7 +13,7 @@
 
           {{for box in comic.boxes:}}
             <a href="{{=box.url}}" class="label-link">
-              <span class="label label-{{='default' if box.private else 'info'}}">
+              <span class="label label-primary">
                 {{if box.private:}}
                   <span class="glyphicon glyphicon-lock"></span>
                 {{pass}}

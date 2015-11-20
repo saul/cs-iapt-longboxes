@@ -11,23 +11,23 @@
   <h2>Search results</h2>
 
   <div class="btn-group" role="group">
-    <a class="btn btn-default" href="{{=URL('comic', 'search', vars={'search': search})}}">
+    <a class="btn btn-default {{='active' if only_field is None else ''}}" href="{{=URL('comic', 'search', vars={'search': search})}}">
       Search all
     </a>
 
-    <a class="btn btn-default" href="{{=URL('comic', 'search', vars={'search': 'title:' + search})}}">
+    <a class="btn btn-default {{='active' if only_field == 'title' else ''}}" href="{{=URL('comic', 'search', vars={'search': 'title:' + search})}}">
       Title only
     </a>
 
-    <a class="btn btn-default" href="{{=URL('comic', 'search', vars={'search': 'publisher:' + search})}}">
+    <a class="btn btn-default {{='active' if only_field == 'publisher' else ''}}" href="{{=URL('comic', 'search', vars={'search': 'publisher:' + search})}}">
       Publisher only
     </a>
 
-    <a class="btn btn-default" href="{{=URL('comic', 'search', vars={'search': 'writer:' + search})}}">
+    <a class="btn btn-default {{='active' if only_field == 'writer' else ''}}" href="{{=URL('comic', 'search', vars={'search': 'writer:' + search})}}">
       Writer only
     </a>
 
-    <a class="btn btn-default" href="{{=URL('comic', 'search', vars={'search': 'artist:' + search})}}">
+    <a class="btn btn-default {{='active' if only_field == 'artist' else ''}}" href="{{=URL('comic', 'search', vars={'search': 'artist:' + search})}}">
       Artist only
     </a>
   </div>

@@ -2,7 +2,7 @@
 @import "mixins.less";
 
 body {
-  padding-top: 50px;
+  padding-top: @navbar-height;
 }
 
 textarea {
@@ -11,6 +11,38 @@ textarea {
 
 .nodecoration {
   text-decoration: none !important;
+}
+
+.navbar {
+  @lb-search-muted: #7f8c8d;
+  @lb-search-active: @navbar-inverse-link-hover-color;
+
+  [name=search] {
+    border: solid 2px @lb-search-muted;
+    color: @lb-search-active;
+    background-color: transparent;
+
+    &::-webkit-input-placeholder {
+      color: @lb-search-muted;
+    }
+
+    &:focus {
+      border-color: @lb-search-active;
+      box-shadow: none;
+    }
+  }
+
+  .btn-inverse {
+    background-color: @lb-search-muted;
+
+    &:hover, &:focus {
+      background-color: @lb-search-active;
+    }
+  }
+}
+
+.navbar-brand img {
+  height: 100%;
 }
 
 .label-link {
@@ -40,10 +72,14 @@ main > h2:first-child {
 
 .comic-desc {
   white-space: pre-wrap;
+  font-size: 1.1em;
+  text-align: justify;
 }
 
 .comic-cover {
   max-width: 100%;
+  float: left;
+  padding: 0 15px 10px 0;
 }
 
 .comic-cover-list-group-item {
@@ -72,23 +108,31 @@ main > h2:first-child {
   right: 0;
 }
 
+#submit_record__row .btn {
+  margin-right: 8px;
+}
+
 .header-actions {
   .clearfix;
 
+  margin-bottom: 10px;
+
   h2 {
-    margin-top: 0;
+    margin: 0 0 10px;
     float: left;
   }
 
   .btn-group {
     float: right;
+    margin-left: 10px;
+    margin-bottom: 10px;
   }
 }
 
 .lb-breadcrumbs {
   @breadcrumb-height: 40px;
 
-  background-color: @panel-default-heading-bg;
+  background-color: @jumbotron-bg;
   border-bottom: solid 1px @panel-default-border;
 
   ol {

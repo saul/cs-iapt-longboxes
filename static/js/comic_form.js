@@ -49,7 +49,7 @@
         var $link = $('<a href="#" class="label-link"></a>');
         $values_container.append($link);
 
-        var $label = $('<span class="person-label label label-default"></span>');
+        var $label = $('<span class="person-label label label-primary"></span>');
         $link.append($label);
 
         $label.text(values[i]);

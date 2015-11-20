@@ -1,11 +1,33 @@
 body {
-  padding-top: 50px;
+  padding-top: 60px;
 }
 textarea {
   resize: vertical;
 }
 .nodecoration {
   text-decoration: none !important;
+}
+.navbar [name=search] {
+  border: solid 2px #7f8c8d;
+  color: #ecf0f1;
+  background-color: transparent;
+}
+.navbar [name=search]::-webkit-input-placeholder {
+  color: #7f8c8d;
+}
+.navbar [name=search]:focus {
+  border-color: #ecf0f1;
+  box-shadow: none;
+}
+.navbar .btn-inverse {
+  background-color: #7f8c8d;
+}
+.navbar .btn-inverse:hover,
+.navbar .btn-inverse:focus {
+  background-color: #ecf0f1;
+}
+.navbar-brand img {
+  height: 100%;
 }
 .label-link {
   text-decoration: none !important;
@@ -28,9 +50,13 @@ main > h2:first-child {
 }
 .comic-desc {
   white-space: pre-wrap;
+  font-size: 1.1em;
+  text-align: justify;
 }
 .comic-cover {
   max-width: 100%;
+  float: left;
+  padding: 0 15px 10px 0;
 }
 .comic-cover-list-group-item {
   padding: 0;
@@ -56,6 +82,12 @@ main > h2:first-child {
   left: 0;
   right: 0;
 }
+#submit_record__row .btn {
+  margin-right: 8px;
+}
+.header-actions {
+  margin-bottom: 10px;
+}
 .header-actions:before,
 .header-actions:after {
   content: " ";
@@ -65,14 +97,16 @@ main > h2:first-child {
   clear: both;
 }
 .header-actions h2 {
-  margin-top: 0;
+  margin: 0 0 10px;
   float: left;
 }
 .header-actions .btn-group {
   float: right;
+  margin-left: 10px;
+  margin-bottom: 10px;
 }
 .lb-breadcrumbs {
-  background-color: #f5f5f5;
+  background-color: #ecf0f1;
   border-bottom: solid 1px #ddd;
 }
 .lb-breadcrumbs ol {
