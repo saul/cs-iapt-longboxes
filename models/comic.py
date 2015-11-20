@@ -79,6 +79,9 @@ class ComicVirtualFields:
     def url(self):
         return URL('comic', 'view', args=[self.comic.id])
 
+    def cover_url(self):
+        return URL('default', 'download', args=[self.comic.cover_image])
+
 
 db.comic.virtualfields.append(ComicVirtualFields())
 

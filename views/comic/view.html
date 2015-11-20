@@ -131,6 +131,12 @@
       <input type="hidden" name="comic" value="{{=comic.id}}">
 
       <a class="list-group-item" href="{{=box.url}}">
+        {{if can_edit and not box.is_unfiled:}}
+          <button type="submit" class="close" title="Remove comic from box">
+            &times;
+          </button>
+        {{pass}}
+
         {{if box.private:}}
           <span class="glyphicon glyphicon-lock"></span>
         {{else:}}
@@ -140,12 +146,6 @@
         {{=box.name}}
 
         <span class="label label-default">{{=box.comic_count}}</span>
-
-        {{if can_edit and not box.is_unfiled:}}
-          <button type="submit" class="close" title="Remove comic from box">
-            &times;
-          </button>
-        {{pass}}
       </a>
     </form>
   {{pass}}
@@ -160,7 +160,7 @@
 
 {{block main}}
 <div class="clearfix">
-  <img class="comic-cover" src="{{=URL('default', 'download', args=[comic.cover_image])}}">
+  <img class="comic-cover" src="{{=comic.cover_url}}">
 
   <p class="comic-desc">{{=comic.description}}</p>
 </div>

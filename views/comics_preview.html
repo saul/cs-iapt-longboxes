@@ -9,6 +9,17 @@
     <div class="col-md-4">
       <div class="panel panel-default">
         <div class="panel-heading">
+        {{if 'box' in response._vars and auth.user and box.owner.id == auth.user.id and not box.is_unfiled:}}
+          <form action="{{=URL('box', 'remove_comic')}}" method="post">
+            <input type="hidden" name="box" value="{{=box.id}}">
+            <input type="hidden" name="comic" value="{{=comic.id}}">
+
+            <button type="submit" class="close" title="Remove comic from box">
+              &times;
+            </button>
+          </form>
+        {{pass}}
+
           <h4 class="panel-title">{{=comic.full_name}}</h4>
 
           {{for box in comic.boxes:}}
@@ -23,9 +34,9 @@
         </div>
 
         <ul class="list-group">
-          <li class="list-group-item comic-cover-list-group-item">
-            <a class="comic-cover-container" href="{{=comic.url}}">
-              <div class="comic-cover-background" style="background-image: url({{=URL('default', 'download', args=[comic.cover_image])}})"></div>
+          <li class="list-group-item comic-preview-cover-list-group-item">
+            <a class="comic-preview-cover-container" href="{{=comic.url}}">
+              <img class="comic-preview-cover" src="{{=comic.cover_url}}">
             </a>
           </li>
 
@@ -41,18 +52,6 @@
             <span class="glyphicon glyphicon-user"></span>
             View <em>{{=comic.owner.screen_name}}</em>'s collection
           </a>
-        {{pass}}
-
-        {{if 'box' in response._vars and auth.user and box.owner.id == auth.user.id and not box.is_unfiled:}}
-        <form action="{{=URL('box', 'remove_comic')}}" method="post">
-          <input type="hidden" name="box" value="{{=box.id}}">
-          <input type="hidden" name="comic" value="{{=comic.id}}">
-
-          <button class="list-group-item" type="submit">
-            <span class="glyphicon glyphicon-trash"></span>
-            Remove from box
-          </button>
-        </form>
         {{pass}}
         </ul>
       </div>

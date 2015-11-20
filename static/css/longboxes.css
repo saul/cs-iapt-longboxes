@@ -56,29 +56,26 @@ main > h2:first-child {
   float: left;
   padding: 0 15px 10px 0;
 }
-.comic-cover-list-group-item {
+.comic-preview-cover-list-group-item {
   padding: 0;
 }
-.comic-cover-container {
+.comic-preview-cover-container {
   display: inline-block;
   width: 100%;
 }
-.comic-cover-container::after {
+.comic-preview-cover-container::after {
   content: '';
   display: block;
   margin-top: 125%;
   /* ensure container height is always 1/4 taller than it is wide, i.e. 3:4 ratio */
 }
-.comic-cover-background {
+.comic-preview-cover {
   position: absolute;
-  background: no-repeat center;
-  background-size: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   /* ensure background image always fills the space, no letterboxing */
-  background-position: top center;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  object-position: top;
 }
 #submit_record__row .btn {
   margin-right: 8px;
