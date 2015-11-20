@@ -148,10 +148,10 @@ def remove_comic():
     if box.is_unfiled:
         flash_and_redirect_back('A comic cannot be removed from the Unfiled box.')
 
-    db(db.comicbox.box == box.id, db.comicbox.comic == comic.id).delete()
+    db(db.comicbox.box == box.id)(db.comicbox.comic == comic.id).delete()
 
     # if the comic no longer belongs to any boxes, add it to the 'Unfiled' box
-    if not db.comicbox(db.comicbox.comic == comic.id):
+    if db(db.comicbox.comic == comic.id).isempty():
         unfiled_box = db.box((db.box.name == 'Unfiled') & (db.box.owner == auth.user.id))
         db.comicbox.insert(comic=comic.id, box=unfiled_box.id)
 
