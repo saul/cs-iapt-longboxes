@@ -178,7 +178,7 @@ def search():
     if only_field:
         comics = queries[only_field](search).select(db.comic.ALL)
     else:
-        query_results = map(lambda q: q(search).select(db.comic.ALL), queries.values())
+        query_results = map(lambda q: q(search).select(db.comic.ALL, distinct=True), queries.values())
         comics = reduce(lambda c, q: c | q, query_results)
 
     return {
