@@ -156,26 +156,29 @@ def search():
     # generate a base query which finds all comics that the logged in user has permission to see
     base_query = db(db.comic.id == db.comicbox.comic)(db.comicbox.box == db.box.id)((db.box.private == False) | (db.box.owner == user_id))
 
+    fuzzy_like = lambda f, q: f.like('%{0}%'.format(q))
+
+    queries = {
+        'title': lambda q: base_query(fuzzy_like(db.comic.title, q)),
+        'publisher': lambda q: base_query(db.publisher.id == db.comic.publisher)(fuzzy_like(db.publisher.name, q)),
+        'writer': lambda q: base_query(db.comicwriter.comic == db.comic.id)(db.writer.id == db.comicwriter.writer)(fuzzy_like(db.writer.name, q)),
+        'artist': lambda q: base_query(db.comicartist.comic == db.comic.id)(db.artist.id == db.comicartist.artist)(fuzzy_like(db.artist.name, q)),
+    }
+
+    only_field, search = None, original_search
+
     search_parts = original_search.split(':', 1)
 
     if len(search_parts) > 1:
-        only_field, search = search_parts
+        if search_parts[0] in queries:
+            only_field, search = search_parts
+        else:
+            response.flash = 'Invalid criteria "%s", expected one of: %s' % (search_parts[0], ', '.join(queries.keys()))
+
+    if only_field:
+        comics = queries[only_field](search).select(db.comic.ALL)
     else:
-        only_field, search = None, original_search
-
-    fuzzy_like = lambda f: f.like('%{0}%'.format(search))
-
-    queries = {
-        'title': base_query(fuzzy_like(db.comic.title)),
-        'publisher': base_query(db.publisher.id == db.comic.publisher)(fuzzy_like(db.publisher.name)),
-        'writer': base_query(db.comicwriter.comic == db.comic.id)(db.writer.id == db.comicwriter.writer)(fuzzy_like(db.writer.name)),
-        'artist': base_query(db.comicartist.comic == db.comic.id)(db.artist.id == db.comicartist.artist)(fuzzy_like(db.artist.name)),
-    }
-
-    if only_field and only_field in queries:
-        comics = queries[only_field].select(db.comic.ALL)
-    else:
-        query_results = map(lambda q: q.select(db.comic.ALL), queries.values())
+        query_results = map(lambda q: q(search).select(db.comic.ALL), queries.values())
         comics = reduce(lambda c, q: c | q, query_results)
 
     return {
