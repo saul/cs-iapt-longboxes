@@ -176,7 +176,7 @@ def search():
             response.flash = 'Invalid criteria "%s", expected one of: %s' % (search_parts[0], ', '.join(queries.keys()))
 
     if only_field:
-        comics = queries[only_field](search).select(db.comic.ALL)
+        comics = queries[only_field](search).select(db.comic.ALL, distinct=True)
     else:
         query_results = map(lambda q: q(search).select(db.comic.ALL, distinct=True), queries.values())
         comics = reduce(lambda c, q: c | q, query_results)
