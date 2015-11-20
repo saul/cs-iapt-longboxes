@@ -13,12 +13,7 @@
     var $current_input = $('<input class="form-control" type="text">');
     $current_input.attr('placeholder', 'Enter name and hit Enter to add person');
 
-    $current_input.keypress(function(e) {
-      // only grab enter
-      if (e.which != 13) {
-        return;
-      }
-
+    var addBufferToValues = function () {
       var newValue = $current_input.val().trim();
       if (!newValue) {
         return;
@@ -30,7 +25,17 @@
       }
 
       $current_input.val('');
+    };
 
+    $current_input.blur(addBufferToValues);
+
+    $current_input.keypress(function(e) {
+      // only grab enter
+      if (e.which != 13) {
+        return;
+      }
+
+      addBufferToValues();
       return false; // don't submit the form
     });
 
@@ -46,14 +51,11 @@
       $values_container.html('');
 
       for(var i = 0; i < values.length; ++i) {
-        var $link = $('<a href="#" class="label-link"></a>');
+        var $link = $('<a href="#" class="person-label label label-primary"></a>');
         $values_container.append($link);
 
-        var $label = $('<span class="person-label label label-primary"></span>');
-        $link.append($label);
-
-        $label.text(values[i]);
-        $label.append('<span class="glyphicon glyphicon-remove"></span>');
+        $link.text(values[i]);
+        $link.append('<span class="glyphicon glyphicon-remove"></span>');
 
         (function(i) {
           $link.click(function() {
@@ -63,6 +65,8 @@
           });
         })(i);
       }
+
+      $current_input.prop('required', values.length == 0);
     };
 
     regenerateLabels();

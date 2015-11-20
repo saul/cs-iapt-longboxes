@@ -1,7 +1,5 @@
 {{for person in people:}}
-<a href="{{=person.search_url}}" class="nodecoration">
-  <span class="label label-primary label-link">
-    {{=person.name}}
-  </span>
+<a href="{{=person.search_url}}" class="label label-primary person-label">
+  {{=person.name}}
 </a>
 {{pass}}

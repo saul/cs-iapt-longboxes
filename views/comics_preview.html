@@ -12,14 +12,12 @@
           <h4 class="panel-title">{{=comic.full_name}}</h4>
 
           {{for box in comic.boxes:}}
-            <a href="{{=box.url}}" class="label-link">
-              <span class="label label-primary">
-                {{if box.private:}}
-                  <span class="glyphicon glyphicon-lock"></span>
-                {{pass}}
+            <a href="{{=box.url}}" class="label label-primary">
+              {{if box.private:}}
+                <span class="glyphicon glyphicon-lock"></span>
+              {{pass}}
 
-                {{=box.name}}
-              </span>
+              {{=box.name}}
             </a>
           {{pass}}
         </div>

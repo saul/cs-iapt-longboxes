@@ -4738,22 +4738,18 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   cursor: not-allowed;
 }
 .label {
-  display: inline;
+  display: inline-block;
   padding: .2em .6em .3em;
   font-size: 75%;
   font-weight: bold;
   line-height: 1;
-  color: #fff;
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
   border-radius: .25em;
 }
-a.label:hover,
-a.label:focus {
-  color: #fff;
-  text-decoration: none;
-  cursor: pointer;
+a.label {
+  text-decoration: none !important;
 }
 .label:empty {
   display: none;
@@ -4763,46 +4759,70 @@ a.label:focus {
   top: -1px;
 }
 .label-default {
-  background-color: #777777;
+  color: #777777;
+  border: solid 1px #777777;
 }
 .label-default[href]:hover,
-.label-default[href]:focus {
-  background-color: #5e5e5e;
+.label-default[href]:focus,
+a:hover .label-default,
+a:focus .label-default {
+  color: white;
+  background-color: #777777;
 }
 .label-primary {
-  background-color: #2980b9;
+  color: #2980b9;
+  border: solid 1px #2980b9;
 }
 .label-primary[href]:hover,
-.label-primary[href]:focus {
-  background-color: #20638f;
+.label-primary[href]:focus,
+a:hover .label-primary,
+a:focus .label-primary {
+  color: white;
+  background-color: #2980b9;
 }
 .label-success {
-  background-color: #5cb85c;
+  color: #5cb85c;
+  border: solid 1px #5cb85c;
 }
 .label-success[href]:hover,
-.label-success[href]:focus {
-  background-color: #449d44;
+.label-success[href]:focus,
+a:hover .label-success,
+a:focus .label-success {
+  color: white;
+  background-color: #5cb85c;
 }
 .label-info {
-  background-color: #5bc0de;
+  color: #5bc0de;
+  border: solid 1px #5bc0de;
 }
 .label-info[href]:hover,
-.label-info[href]:focus {
-  background-color: #31b0d5;
+.label-info[href]:focus,
+a:hover .label-info,
+a:focus .label-info {
+  color: white;
+  background-color: #5bc0de;
 }
 .label-warning {
-  background-color: #f0ad4e;
+  color: #f0ad4e;
+  border: solid 1px #f0ad4e;
 }
 .label-warning[href]:hover,
-.label-warning[href]:focus {
-  background-color: #ec971f;
+.label-warning[href]:focus,
+a:hover .label-warning,
+a:focus .label-warning {
+  color: white;
+  background-color: #f0ad4e;
 }
 .label-danger {
-  background-color: #d9534f;
+  color: #d9534f;
+  border: solid 1px #d9534f;
 }
 .label-danger[href]:hover,
-.label-danger[href]:focus {
-  background-color: #c9302c;
+.label-danger[href]:focus,
+a:hover .label-danger,
+a:focus .label-danger {
+  color: white;
+  background-color: #d9534f;
 }
 .badge {
   display: inline-block;
