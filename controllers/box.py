@@ -113,6 +113,7 @@ def add_comic():
     POST /box/add_comic
 
     Adds a comic to a box, also may create or update an existing box if 'new box' was specified.
+    The 'comic' POST var can occur multiple times to add many comics to a single box in one operation.
     """
 
     # Create a new box
