@@ -113,7 +113,7 @@ def add_comic():
 
     # Create a new box
     if request.post_vars['box'] == 'new':
-        target_box = db.box(db.box.name.like(request.post_vars['name']))(db.box.owner == auth.user.id)
+        target_box = db.box(db.box.name.like(request.post_vars['name']) & (db.box.owner == auth.user.id))
         private = bool(request.post_vars['private'])
 
         if target_box:
