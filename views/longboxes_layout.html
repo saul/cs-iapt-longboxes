@@ -77,8 +77,8 @@
 
     <main class="container">
       {{if response.flash:}}
-        <div class="alert alert-warning alert-dismissable">
-          {{=response.flash}}
+        <div class="alert alert-{{=response.flash['class'] if isinstance(response.flash, dict) else 'warning'}} alert-dismissable">
+          {{=response.flash['text'] if isinstance(response.flash, dict) else response.flash}}
 
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
