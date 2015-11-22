@@ -24,6 +24,9 @@ def view():
 
     comics = db(db.comicbox.comic == db.comic.id)(db.comicbox.box == box.id).select(db.comic.ALL)
 
+    other_comics = db(db.comic.id == db.comicbox.comic)(db.box.id == db.comicbox.box)(db.box.id != box.id)(
+        db.box.owner == user_id).select(db.comic.ALL, groupby=db.comic.id)
+
     user_owned = user_id == box.owner.id
     can_edit = user_owned and not box.is_unfiled
 
@@ -41,6 +44,7 @@ def view():
     return {
         'box': box,
         'comics': comics,
+        'other_comics': other_comics,
         'can_edit': can_edit,
         'user_owned': user_owned,
         'rename_form': rename_form
@@ -124,43 +128,51 @@ def add_comic():
     else:
         target_box = get_or_404(db.box, request.post_vars['box'], owner=auth.user.id)
 
-    source_comic = get_or_404(db.comic, request.post_vars['comic'])
+    raw_comic = request.post_vars['comic']
 
-    # Is the comic already in the box we want to add it to?
-    if db.comicbox((db.comicbox.box == target_box.id) & (db.comicbox.comic == source_comic.id)):
-        flash_and_redirect_back('warning', 'This comic already exists in %s.' % target_box.name)
+    if raw_comic is None:
+        flash_and_redirect_back('warning', 'No comics selected.')
 
-    # If this user doesn't own the comic, duplicate it
-    if db(db.box.owner == auth.user.id)(db.comicbox.box == db.box.id)(db.comicbox.comic == source_comic.id).isempty():
-        target_comic_id = db.comic.insert(
-            publisher=source_comic.publisher,
-            title=source_comic.title,
-            issue=source_comic.issue,
-            description=source_comic.description,
-            cover_image=source_comic.cover_image
-        )
+    comics = raw_comic if isinstance(raw_comic, list) else [raw_comic]
 
-        for comicwriter in source_comic.comicwriter.select():
-            db.comicwriter.insert(writer=comicwriter.writer, comic=target_comic_id)
+    for source_comic_id in comics:
+        source_comic = get_or_404(db.comic, source_comic_id)
 
-        for comicartist in source_comic.comicartist.select():
-            db.comicartist.insert(artist=comicartist.artist, comic=target_comic_id)
+        # Is the comic already in the box we want to add it to?
+        if db.comicbox((db.comicbox.box == target_box.id) & (db.comicbox.comic == source_comic.id)):
+            flash_and_redirect_back('warning', 'This comic already exists in %s.' % target_box.name)
 
-    elif target_box.is_unfiled:
-        return flash_and_redirect_back('danger',
-                                       'This comic cannot be added to "Unfiled" as it is already belongs to a box.')
+        # If this user doesn't own the comic, duplicate it
+        if db(db.box.owner == auth.user.id)(db.comicbox.box == db.box.id)(db.comicbox.comic == source_comic.id).isempty():
+            target_comic_id = db.comic.insert(
+                publisher=source_comic.publisher,
+                title=source_comic.title,
+                issue=source_comic.issue,
+                description=source_comic.description,
+                cover_image=source_comic.cover_image
+            )
 
-    else:
-        target_comic_id = source_comic.id
+            for comicwriter in source_comic.comicwriter.select():
+                db.comicwriter.insert(writer=comicwriter.writer, comic=target_comic_id)
 
-    # Add comic to box
-    db.comicbox.insert(comic=target_comic_id, box=target_box.id)
+            for comicartist in source_comic.comicartist.select():
+                db.comicartist.insert(artist=comicartist.artist, comic=target_comic_id)
 
-    # Find the Unfiled box for this user
-    if not target_box.is_unfiled:
-        db((db.comicbox.comic == target_comic_id) & (db.comicbox.box == _unfiled_box().id)).delete()
+        elif target_box.is_unfiled:
+            return flash_and_redirect_back('danger',
+                                           'This comic cannot be added to "Unfiled" as it is already belongs to a box.')
 
-    flash('success', 'Added comic to box.', URL('comic', 'view', args=[target_comic_id]))
+        else:
+            target_comic_id = source_comic.id
+
+        # Add comic to box
+        db.comicbox.insert(comic=target_comic_id, box=target_box.id)
+
+        # Find the Unfiled box for this user
+        if not target_box.is_unfiled:
+            db((db.comicbox.comic == target_comic_id) & (db.comicbox.box == _unfiled_box().id)).delete()
+
+    flash_and_redirect_back('success', 'Added comic%s to box.' % ('s' if len(comics) > 1 else ''))
 
 
 @auth.requires_login()
