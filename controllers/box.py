@@ -22,10 +22,14 @@ def view():
     user_id = auth.user.id if auth.is_logged_in() else 0
     box = get_or_404(db.box, ((db.box.id == request.args(0)) & ((db.box.owner == user_id) | (db.box.private == False))))
 
+    # find all comics in this box
     comics = db(db.comicbox.comic == db.comic.id)(db.comicbox.box == box.id).select(db.comic.ALL)
+    comic_ids = map(lambda c: c.id, comics)
 
-    other_comics = db(db.comic.id == db.comicbox.comic)(db.box.id == db.comicbox.box)(db.box.id != box.id)(
+    # find all the comics owned by this user that aren't already in the box
+    other_comics = db(db.comic.id == db.comicbox.comic)(db.box.id == db.comicbox.box)(
         db.box.owner == user_id).select(db.comic.ALL, groupby=db.comic.id)
+    other_comics = filter(lambda c: c.id not in comic_ids, other_comics)
 
     user_owned = user_id == box.owner.id
     can_edit = user_owned and not box.is_unfiled
@@ -173,7 +177,15 @@ def add_comic():
         if not target_box.is_unfiled:
             db((db.comicbox.comic == target_comic_id) & (db.comicbox.box == _unfiled_box().id)).delete()
 
-    flash_and_redirect_back('success', 'Added comic%s to box.' % ('s' if len(comics) > 1 else ''))
+    flash_text = 'Added comic%s to %s.' % ('s' if len(comics) > 1 else '', target_box.name)
+
+    # if we just duplicated this comic, redirect to the new comic
+    if source_comic.owner.id != auth.user.id:
+        flash('success', flash_text, URL('comic', 'view', args=[target_comic_id]))
+
+    # otherwise, redirect back
+    else:
+        flash_and_redirect_back('success', flash_text)
 
 
 @auth.requires_login()
