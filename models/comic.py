@@ -12,6 +12,7 @@ db.define_table('writer',
 
 class WriterVirtualFields:
     def search_url(self):
+        """URL to search for comics that this writer contributed to."""
         return URL('comic', 'search', vars={'search': 'writer:' + self.writer.name})
 
 
@@ -27,6 +28,7 @@ db.define_table('artist',
 
 class ArtistVirtualFields:
     def search_url(self):
+        """URL to search for comics that this artist contributed to."""
         return URL('comic', 'search', vars={'search': 'artist:' + self.artist.name})
 
 
@@ -43,6 +45,7 @@ db.define_table('publisher',
 
 class PublisherVirtualFields:
     def search_url(self):
+        """URL to search for comics that this publisher published."""
         return URL('comic', 'search', vars={'search': 'publisher:' + self.publisher.name})
 
 
@@ -65,11 +68,14 @@ db.define_table('comic',
 
 class ComicVirtualFields:
     def owner(self):
+        """Returns the owner of this comic."""
         return db(db.comicbox.comic == self.comic.id)(db.box.id == db.comicbox.box)(
             db.auth_user.id == db.box.owner).select(db.auth_user.ALL).first()
 
     def boxes(self):
+        """Returns the boxes that contain this comic that the logged in user can see."""
         user_id = auth.user.id if auth.user else 0
+
         return db(db.comicbox.comic == self.comic.id)(db.box.id == db.comicbox.box)(
             (db.box.private == False) | (db.box.owner == user_id)).select(db.box.ALL)
 
@@ -77,9 +83,11 @@ class ComicVirtualFields:
         return '%s #%s' % (self.comic.title, self.comic.issue)
 
     def url(self):
+        """Returns the URL to view this comic."""
         return URL('comic', 'view', args=[self.comic.id])
 
     def cover_url(self):
+        """Returns the URL to the cover image."""
         return URL('default', 'download', args=[self.comic.cover_image])
 
 
