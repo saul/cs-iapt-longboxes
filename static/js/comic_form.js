@@ -28,15 +28,14 @@
      * Adds what's currently in the buffer to the list of people
      */
     var addBufferToValues = function () {
-      var newValue = $current_input.val().replace(';', '').trim();
-      if (!newValue) {
-        return;
-      }
+      var newValue = $current_input.val().replace(/;/g, '').trim();
 
-      // don't add the name if it already exists
-      if (values.indexOf(newValue) === -1) {
-        values.push(newValue);
-        refresh();
+      if (newValue) {
+        // don't add the name if it already exists
+        if (values.indexOf(newValue) === -1) {
+          values.push(newValue);
+          refresh();
+        }
       }
 
       // clear the input
