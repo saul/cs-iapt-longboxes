@@ -28,7 +28,7 @@
      * Adds what's currently in the buffer to the list of people
      */
     var addBufferToValues = function () {
-      var newValue = $current_input.val().trim();
+      var newValue = $current_input.val().replace(';', '').trim();
       if (!newValue) {
         return;
       }
