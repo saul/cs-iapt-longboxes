@@ -1,17 +1,57 @@
 @import "variables.less";
 @import "mixins.less";
 
+/* ============================================================================
+ *
+ *  Foundation
+ *
+ * ========================================================================= */
+
 body {
   padding-top: @navbar-height;
+}
+
+nav + main {
+  /* put spacing between the navbar and main body */
+  margin-top: 20px;
+}
+
+main > h2:first-child {
+  /* remove the margin as we already have some on the main element */
+  margin-top: 0;
 }
 
 textarea {
   resize: vertical;
 }
 
-.nodecoration {
-  text-decoration: none !important;
+.header-actions {
+  .clearfix;
+
+  margin-bottom: 10px;
+
+  h2 {
+    margin: 0 0 10px;
+    float: left;
+  }
+
+  .btn-group {
+    float: right;
+    margin-left: 10px;
+    margin-bottom: 10px;
+  }
 }
+
+#submit_record__row .btn {
+  /* add spacing between web2py buttons */
+  margin-right: 8px;
+}
+
+/* ============================================================================
+ *
+ *  Navigation bar
+ *
+ * ========================================================================= */
 
 .navbar {
   @lb-search-muted: #7f8c8d;
@@ -49,6 +89,12 @@ textarea {
   margin-right: 0.2em;
 }
 
+/* ============================================================================
+ *
+ *  Person labels
+ *
+ * ========================================================================= */
+
 .person-label-list {
   line-height: 2em;
 }
@@ -63,13 +109,11 @@ textarea {
   }
 }
 
-nav + main {
-  margin-top: 20px;
-}
-
-main > h2:first-child {
-  margin-top: 0; /* remove the margin as we already have some on the main element */
-}
+/* ============================================================================
+ *
+ *  Comic page
+ *
+ * ========================================================================= */
 
 .comic-desc {
   white-space: pre-wrap;
@@ -82,6 +126,12 @@ main > h2:first-child {
   float: left;
   padding: 0 15px 10px 0;
 }
+
+/* ============================================================================
+ *
+ *  Comic preview panel
+ *
+ * ========================================================================= */
 
 .comic-preview {
   .panel-title {
@@ -100,7 +150,9 @@ main > h2:first-child {
   &::after {
     content: '';
     display: block;
-    margin-top: 125%; /* ensure container height is always 1/4 taller than it is wide, i.e. 3:4 ratio */
+
+    /* ensure container height is always 1/4 taller than it is wide, i.e. 3:4 ratio */
+    margin-top: 125%;
   }
 }
 
@@ -108,30 +160,17 @@ main > h2:first-child {
   position: absolute;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* ensure background image always fills the space, no letterboxing */
+
+  /* ensure background image always fills the space, no letterboxing */
+  object-fit: cover;
   object-position: top;
 }
 
-#submit_record__row .btn {
-  margin-right: 8px;
-}
-
-.header-actions {
-  .clearfix;
-
-  margin-bottom: 10px;
-
-  h2 {
-    margin: 0 0 10px;
-    float: left;
-  }
-
-  .btn-group {
-    float: right;
-    margin-left: 10px;
-    margin-bottom: 10px;
-  }
-}
+/* ============================================================================
+ *
+ *  Breadcrumbs
+ *
+ * ========================================================================= */
 
 .lb-breadcrumbs {
   @breadcrumb-height: 40px;
@@ -150,7 +189,9 @@ main > h2:first-child {
     height: @breadcrumb-height;
     line-height: @breadcrumb-height;
 
-    &.active { color: @text-muted; }
+    &.active {
+      color: @text-muted;
+    }
 
     a {
       display: inline-block;

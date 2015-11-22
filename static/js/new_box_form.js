@@ -1,3 +1,7 @@
+/*
+ * Script to manage the 'Create new' form when adding a comic to a box.
+ */
+
 (function() {
   'use strict';
 
@@ -22,8 +26,7 @@
     };
 
     $select.change(function() {
-      console.log('changed');
-
+      // show the form if the user selected 'Create new'
       if ($select.val() == 'new') {
         showGroup();
       } else {
