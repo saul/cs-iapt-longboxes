@@ -1,5 +1,5 @@
-from helpers import flash_and_redirect_back, get_or_create, get_or_404, add_element_required_attr
 import comic_helpers
+from helpers import flash, flash_and_redirect_back, get_or_create, get_or_404, add_element_required_attr
 
 
 class ComicForm:
@@ -82,10 +82,9 @@ def create():
         form.form.vars.box = get_or_404(db.box, request.get_vars['box'], owner=auth.user.id).id
 
     if form.process().accepted:
-        session.flash = 'Created comic'
-        redirect(URL('comic', 'view', args=[form.id]))
+        flash('success', 'Created comic.', URL('comic', 'view', args=[form.id]))
     elif form.form.errors:
-        response.flash = 'Form has errors'
+        flash('danger', 'Form has errors.')
 
     return {
         'form': form.form,
@@ -98,10 +97,12 @@ def delete():
     comic = get_or_404(db.comic, request.args(0))
 
     if not comic_helpers.user_can_edit(db, comic.id, auth.user.id):
-        flash_and_redirect_back('You cannot delete a comic you did not create.')
+        flash_and_redirect_back('danger', 'You cannot delete a comic you did not create.')
 
     comic.delete_record()
-    flash_and_redirect_back('Comic deleted', default=URL('collection', 'view', args=[auth.user.id]), avoid='/comic/view')
+    flash_and_redirect_back('info', 'Comic deleted.',
+                            default=URL('collection', 'view', args=[auth.user.id]),
+                            avoid='/comic/view')
 
 
 @auth.requires_login()
@@ -110,15 +111,14 @@ def edit():
 
     # Ensure the user owns this comic
     if not comic_helpers.user_can_edit(db, comic.id, auth.user.id):
-        flash_and_redirect_back('You cannot edit a comic you did not create.')
+        flash_and_redirect_back('danger', 'You cannot edit a comic you did not create.')
 
     form = ComicForm(comic)
 
     if form.process().accepted:
-        session.flash = 'Comic updated successfully'
-        redirect(comic.url)
+        flash('info', 'Comic updated successfully.', comic.url)
     elif form.form.errors:
-        response.flash = 'Form has errors'
+        flash('danger', 'Form has errors.')
 
     return {
         'form': form.form,
@@ -139,10 +139,12 @@ def view():
 
     return {
         'comic': comic,
-        'boxes': db(db.comicbox.comic == comic.id)(db.box.id == db.comicbox.box)((db.box.private == False) | (db.box.owner == user_id)).select(db.box.ALL),
+        'boxes': db(db.comicbox.comic == comic.id)(db.box.id == db.comicbox.box)(
+            (db.box.private == False) | (db.box.owner == user_id)).select(db.box.ALL),
         'artists': db(db.comicartist.comic == comic.id)(db.artist.id == db.comicartist.artist).select(db.artist.ALL),
         'writers': db(db.comicwriter.comic == comic.id)(db.writer.id == db.comicwriter.writer).select(db.writer.ALL),
-        'owner': db(db.comicbox.comic == comic.id)(db.box.id == db.comicbox.box)(db.auth_user.id == db.box.owner).select(db.auth_user.ALL).first(),
+        'owner': db(db.comicbox.comic == comic.id)(db.box.id == db.comicbox.box)(
+            db.auth_user.id == db.box.owner).select(db.auth_user.ALL).first(),
         'can_edit': comic_helpers.user_can_edit(db, comic.id, user_id),
         'available_boxes': available_boxes
     }
@@ -154,15 +156,18 @@ def search():
     user_id = auth.user.id if auth.is_logged_in() else 0
 
     # generate a base query which finds all comics that the logged in user has permission to see
-    base_query = db(db.comic.id == db.comicbox.comic)(db.comicbox.box == db.box.id)((db.box.private == False) | (db.box.owner == user_id))
+    base_query = db(db.comic.id == db.comicbox.comic)(db.comicbox.box == db.box.id)(
+        (db.box.private == False) | (db.box.owner == user_id))
 
     fuzzy_like = lambda f, q: f.like('%{0}%'.format(q))
 
     queries = {
         'title': lambda q: base_query(fuzzy_like(db.comic.title, q)),
         'publisher': lambda q: base_query(db.publisher.id == db.comic.publisher)(fuzzy_like(db.publisher.name, q)),
-        'writer': lambda q: base_query(db.comicwriter.comic == db.comic.id)(db.writer.id == db.comicwriter.writer)(fuzzy_like(db.writer.name, q)),
-        'artist': lambda q: base_query(db.comicartist.comic == db.comic.id)(db.artist.id == db.comicartist.artist)(fuzzy_like(db.artist.name, q)),
+        'writer': lambda q: base_query(db.comicwriter.comic == db.comic.id)(db.writer.id == db.comicwriter.writer)(
+            fuzzy_like(db.writer.name, q)),
+        'artist': lambda q: base_query(db.comicartist.comic == db.comic.id)(db.artist.id == db.comicartist.artist)(
+            fuzzy_like(db.artist.name, q)),
     }
 
     only_field, search = None, original_search
@@ -173,7 +178,7 @@ def search():
         if search_parts[0] in queries:
             only_field, search = search_parts
         else:
-            response.flash = 'Invalid criteria "%s", expected one of: %s' % (search_parts[0], ', '.join(queries.keys()))
+            flash('danger', 'Invalid criteria "%s", expected one of: %s' % (search_parts[0], ', '.join(queries.keys())))
 
     if only_field:
         comics = queries[only_field](search).select(db.comic.ALL, distinct=True)

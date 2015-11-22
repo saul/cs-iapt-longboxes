@@ -1,4 +1,4 @@
-from helpers import flash_and_redirect_back, get_or_404, add_element_required_attr
+from helpers import flash, flash_and_redirect_back, get_or_404, add_element_required_attr
 
 
 def _validate_box_form(form):
@@ -20,11 +20,10 @@ def view():
         add_element_required_attr(db.box, rename_form)
 
         if rename_form.process(onvalidation=_validate_box_form).accepted:
-            session.flash = 'Box renamed successfully'
-            redirect(request.env['PATH_INFO'])
+            flash('info', 'Box renamed successfully.', request.env['PATH_INFO'])
 
         if rename_form.errors:
-            response.flash = 'Form has errors'
+            flash('danger', 'Form has errors.')
     else:
         rename_form = None
 
@@ -45,10 +44,9 @@ def create():
     form.vars.owner = auth.user
 
     if form.process(onvalidation=_validate_box_form).accepted:
-        session.flash = 'Created box'
-        redirect(URL('box', 'view', args=[form.vars.id]))
+        flash('success', 'Created box.', URL('box', 'view', args=[form.vars.id]))
     elif form.errors:
-        response.flash = 'Form has errors'
+        flash('danger', 'Form has errors.')
 
     return {
         'form': form
@@ -60,8 +58,7 @@ def delete():
     box = get_or_404(db.box, request.args(0), owner=auth.user.id)
 
     if box.is_unfiled:
-        session.flash = 'You cannot delete the Unfiled box.'
-        redirect(box.url)
+        flash('danger', 'You cannot delete the Unfiled box.', box.url)
 
     # Find the Unfiled box for this user
     unfiled_box = db.box((db.box.name == 'Unfiled') & (db.box.owner == auth.user.id))
@@ -83,8 +80,7 @@ def delete():
     # Delete the old box
     box.delete_record()
 
-    session.flash = 'Box deleted'
-    redirect(URL('collection', 'view', args=[auth.user.id]))
+    flash('info', 'Box deleted.', URL('collection', 'view', args=[auth.user.id]))
 
 
 @auth.requires_login()
@@ -105,7 +101,7 @@ def add_comic():
 
     # Is the comic already in the box we want to add it to?
     if db.comicbox((db.comicbox.box == target_box.id) & (db.comicbox.comic == source_comic.id)):
-        flash_and_redirect_back('This comic already exists in the box.')
+        flash_and_redirect_back('warning', 'This comic already exists in %s.' % target_box.name)
 
     # If this user doesn't own the comic, duplicate it
     if db(db.box.owner == auth.user.id)(db.comicbox.box == db.box.id)(db.comicbox.comic == source_comic.id).isempty():
@@ -124,7 +120,8 @@ def add_comic():
             db.comicartist.insert(artist=comicartist.artist, comic=target_comic_id)
 
     elif target_box.is_unfiled:
-        return flash_and_redirect_back('This comic cannot be added to "Unfiled" as it is already belongs to a box.')
+        return flash_and_redirect_back('danger',
+                                       'This comic cannot be added to "Unfiled" as it is already belongs to a box.')
 
     else:
         target_comic_id = source_comic.id
@@ -133,11 +130,11 @@ def add_comic():
     db.comicbox.insert(comic=target_comic_id, box=target_box.id)
 
     # Find the Unfiled box for this user
-    unfiled_box = db.box((db.box.name == 'Unfiled') & (db.box.owner == auth.user.id))
-    db((db.comicbox.comic == target_comic_id) & (db.comicbox.box == unfiled_box.id)).delete()
+    if not target_box.is_unfiled:
+        unfiled_box = db.box((db.box.name == 'Unfiled') & (db.box.owner == auth.user.id))
+        db((db.comicbox.comic == target_comic_id) & (db.comicbox.box == unfiled_box.id)).delete()
 
-    session.flash = 'Added comic to box.'
-    redirect(target_box.url)
+    flash('success', 'Added comic to box.', URL('comic', 'view', args=[target_comic_id]))
 
 
 @auth.requires_login()
@@ -146,7 +143,7 @@ def remove_comic():
     comic = get_or_404(db.comic, request.post_vars['comic'])
 
     if box.is_unfiled:
-        flash_and_redirect_back('A comic cannot be removed from the Unfiled box.')
+        flash_and_redirect_back('danger', 'A comic cannot be removed from the Unfiled box.')
 
     db(db.comicbox.box == box.id)(db.comicbox.comic == comic.id).delete()
 
@@ -155,7 +152,7 @@ def remove_comic():
         unfiled_box = db.box((db.box.name == 'Unfiled') & (db.box.owner == auth.user.id))
         db.comicbox.insert(comic=comic.id, box=unfiled_box.id)
 
-    flash_and_redirect_back('Removed comic from box.')
+    flash_and_redirect_back('info', 'Removed comic from box.')
 
 
 @auth.requires_login()
@@ -170,7 +167,7 @@ def set_privacy():
 
     new_private_value = privacy_str_to_private_bool.get(new_privacy_str)
     if new_private_value is None:
-        flash_and_redirect_back('Invalid privacy option for box.')
+        flash_and_redirect_back('danger', 'Invalid privacy option for box.')
 
     box.update_record(private=new_private_value)
-    flash_and_redirect_back('Box is now %s.' % new_privacy_str)
+    flash_and_redirect_back('info', 'Box is now %s.' % new_privacy_str)

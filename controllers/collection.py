@@ -1,4 +1,4 @@
-from helpers import flash_and_redirect_back, get_or_404
+from helpers import get_or_404
 
 
 def view():
@@ -13,7 +13,8 @@ def view():
 
     user = get_or_404(db.auth_user, request.args(0))
 
-    comics = db(db.comic.id == db.comicbox.comic)(db.box.id == db.comicbox.box)(db.box.owner == user.id)((db.box.owner == logged_in_user) | (db.box.private == False)).select(db.comic.ALL, groupby=db.comic.id)
+    comics = db(db.comic.id == db.comicbox.comic)(db.box.id == db.comicbox.box)(db.box.owner == user.id)(
+        (db.box.owner == logged_in_user) | (db.box.private == False)).select(db.comic.ALL, groupby=db.comic.id)
 
     boxes = db((db.box.owner == user.id) & ((db.box.private == False) | (db.box.owner == logged_in_user))).select()
 
