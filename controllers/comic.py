@@ -3,6 +3,12 @@ from helpers import flash, flash_and_redirect_back, get_or_create, get_or_404, a
 
 
 class ComicForm:
+    """
+    Form to represent a comic.
+
+    Automatically handles artist/writers many-to-many relationship and enforces referential integrity.
+    """
+
     def __init__(self, record=None):
         if record:
             self.id = record.id
@@ -38,6 +44,8 @@ class ComicForm:
         add_element_required_attr(db.comic, self.form)
 
     def _on_success(self, form):
+        """Called when a form is validated correctly."""
+
         # Create the publisher if it doesn't exist already
         publisher_id = get_or_create(db.publisher, name=form.vars.publisher)
 
@@ -53,6 +61,7 @@ class ComicForm:
             # Add the comic to the box
             db.comicbox.insert(comic=self.id, box=form.vars.box)
 
+        # Update the writers and artists many-to-many relationship
         self._process_writers_and_artists()
 
     def process(self, **kwargs):
@@ -60,6 +69,8 @@ class ComicForm:
         return self.form.process(**kwargs)
 
     def _process_writers_and_artists(self):
+        """Update the writers and artists many-to-many relationship."""
+
         db(db.comicartist.comic == self.id).delete()
 
         for artist_name in self.form.vars.artists.split(';'):
@@ -75,6 +86,12 @@ class ComicForm:
 
 @auth.requires_login()
 def create():
+    """
+    POST /comic/create?box=:box_id
+
+    Creates a new comic.
+    """
+
     form = ComicForm()
 
     # Pre-select the box that the user wants to add to
@@ -94,6 +111,11 @@ def create():
 
 @auth.requires_login()
 def delete():
+    """
+    POST /comic/delete/:id
+
+    Deletes a comic.
+    """
     comic = get_or_404(db.comic, request.args(0))
 
     if not comic_helpers.user_can_edit(db, comic.id, auth.user.id):
@@ -107,6 +129,12 @@ def delete():
 
 @auth.requires_login()
 def edit():
+    """
+    POST /comic/edit/:id
+
+    Updates comic details.
+    """
+
     comic = get_or_404(db.comic, request.args(0))
 
     # Ensure the user owns this comic
@@ -128,6 +156,12 @@ def edit():
 
 
 def view():
+    """
+    GET /comic/view/:id
+
+    Views the details for a specific comic.
+    """
+
     comic = get_or_404(db.comic, request.args(0))
 
     # Ensure that the user either owns the comic or that it belongs to a public box
@@ -151,6 +185,12 @@ def view():
 
 
 def search():
+    """
+    GET /comic/search?search=:query
+
+    Searches all public comics across a number of criteria.
+    """
+
     original_search = request.get_vars.get('search', '')
 
     user_id = auth.user.id if auth.is_logged_in() else 0
@@ -159,8 +199,10 @@ def search():
     base_query = db(db.comic.id == db.comicbox.comic)(db.comicbox.box == db.box.id)(
         (db.box.private == False) | (db.box.owner == user_id))
 
+    # basic partial matching
     fuzzy_like = lambda f, q: f.like('%{0}%'.format(q))
 
+    # generate the queries for each criteria
     queries = {
         'title': lambda q: base_query(fuzzy_like(db.comic.title, q)),
         'publisher': lambda q: base_query(db.publisher.id == db.comic.publisher)(fuzzy_like(db.publisher.name, q)),
@@ -174,6 +216,7 @@ def search():
 
     search_parts = original_search.split(':', 1)
 
+    # determine which (if any) criteria to search against
     if len(search_parts) > 1:
         if search_parts[0] in queries:
             only_field, search = search_parts
@@ -181,8 +224,10 @@ def search():
             flash('danger', 'Invalid criteria "%s", expected one of: %s' % (search_parts[0], ', '.join(queries.keys())))
 
     if only_field:
+        # filter using a single criteria
         comics = queries[only_field](search).select(db.comic.ALL, distinct=True)
     else:
+        # combine all queries to a single set of comics
         query_results = map(lambda q: q(search).select(db.comic.ALL, distinct=True), queries.values())
         comics = reduce(lambda c, q: c | q, query_results)
 

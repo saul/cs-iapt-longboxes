@@ -2,6 +2,12 @@ from helpers import get_or_404
 
 
 def view():
+    """
+    GET /collection/view
+
+    Shows the collection of a specific user, or the logged in user if not specified.
+    """
+
     logged_in_user = auth.user.id if auth.user else 0
 
     if request.args(0) is None:

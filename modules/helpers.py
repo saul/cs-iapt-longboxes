@@ -5,6 +5,7 @@ from gluon.http import redirect, HTTP
 
 
 def flash(flash_class, text, redirect_url=None):
+    """Updates the flash key and optionally redirects to another URL."""
     flash_info = {
         'class': flash_class,
         'text': text
@@ -18,6 +19,7 @@ def flash(flash_class, text, redirect_url=None):
 
 
 def flash_and_redirect_back(flash_class, text, default=URL('default', 'index'), avoid=None):
+    """Flashes and redirects to the URL in the referrer, optionally avoiding some URLs."""
     referrer = current.request.env.http_referer
 
     if referrer and (avoid is None or avoid not in referrer):
@@ -29,6 +31,7 @@ def flash_and_redirect_back(flash_class, text, default=URL('default', 'index'), 
 
 
 def get_or_404(model, id, **kwargs):
+    """Gets the first instance that matches a criteria or raises 404."""
     record = model(id, **kwargs)
     if not record:
         raise HTTP(404)
@@ -36,6 +39,7 @@ def get_or_404(model, id, **kwargs):
 
 
 def get_or_create(model, **fields):
+    """Gets the first instance that matches a criteria or creates it."""
     record = model(**fields)
     if record:
         return record.id
@@ -43,7 +47,10 @@ def get_or_create(model, **fields):
 
 
 def add_element_required_attr(model, form):
+    """Adds the HTML5 required attribute to all field values which must not be empty."""
+
     def is_not_empty(field):
+        # Some fields have multiple validators
         if isinstance(field.requires, (list, tuple)):
             requires = field.requires
         else:
