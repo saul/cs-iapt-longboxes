@@ -55,14 +55,20 @@ db.publisher.virtualfields.append(PublisherVirtualFields())
 #  Comic
 # ------------------------------------------------------------------------
 db.define_table('comic',
-                Field('publisher', db.publisher, required=True, notnull=True,
+                Field('publisher', db.publisher,
+                      required=True, notnull=True,
                       requires=IS_IN_DB(db, 'publisher.id', '%(name)s', zero='Choose publisher')),
                 Field('title', required=True, notnull=True, requires=IS_NOT_EMPTY()),
-                Field('issue', 'integer', required=True, notnull=True, requires=IS_INT_IN_RANGE(1, 1e100), default=1),
-                Field('description', 'text', required=True, notnull=True,
+                Field('issue', 'integer', required=True, notnull=True, requires=IS_INT_IN_RANGE(1, 1e100), default=1,
+                      comment='Must be a number greater than 0.'),
+                Field('description', 'text',
+                      required=True, notnull=True,
                       requires=[IS_FEWER_WORDS(300), IS_NOT_EMPTY()]),
-                Field('cover_image', 'upload', required=True, notnull=True, requires=[IS_IMAGE(maxsize=(300, 400))],
-                      uploadfolder=os.path.join(os.path.dirname(__file__), '..', 'uploads'))
+                Field('cover_image', 'upload',
+                      required=True, notnull=True,
+                      requires=[IS_IMAGE(maxsize=(300, 400))],
+                      uploadfolder=os.path.join(os.path.dirname(__file__), '..', 'uploads'),
+                      comment='Image dimensions must not exceed 300x400 pixels.')
                 )
 
 
