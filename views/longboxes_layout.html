@@ -47,11 +47,24 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav">
             <li>
-              <a href="{{=URL('comic', 'create')}}">New Comic</a>
+              <a href="{{=URL('collection', 'view')}}">
+                <span class="glyphicon glyphicon-th"></span>
+                My Collection
+              </a>
             </li>
 
             <li>
-              <a href="{{=URL('collection', 'view')}}">My Collection</a>
+              <a href="{{=URL('box', 'create')}}">
+                <span class="glyphicon glyphicon-inbox"></span>
+                New Box
+              </a>
+            </li>
+
+            <li>
+              <a href="{{=URL('comic', 'create')}}">
+                <span class="glyphicon glyphicon-plus"></span>
+                New Comic
+              </a>
             </li>
           </ul>
 
