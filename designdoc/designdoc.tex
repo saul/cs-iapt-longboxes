@@ -1,15 +1,19 @@
 \documentclass[fontsize=12pt,a4paper]{scrreprt}
 
 \usepackage[margin=1in,heightrounded]{geometry}
-
-\RequirePackage[T1]{fontenc} % prevents < in text mode turning into
-\RequirePackage{textcomp}    % ?', etc
-\RequirePackage[osf]{mathpazo} % Palatino font
-\RequirePackage{courier} % nicer typewriter-style fonts
-\RequirePackage[scaled=.9]{helvet} % nice san serif fonts
-\RequirePackage{microtype} % micro-typographical extensions
-\RequirePackage[british]{babel} % British hyphenation patterns, etc.
-\RequirePackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{lipsum}
+\usepackage[T1]{fontenc} % prevents < in text mode turning into
+\usepackage{textcomp}    % ?', etc
+\usepackage[osf]{mathpazo} % Palatino font
+\usepackage{courier} % nicer typewriter-style fonts
+\usepackage[scaled=.9]{helvet} % nice san serif fonts
+\usepackage{microtype} % micro-typographical extensions
+\usepackage[british]{babel} % British hyphenation patterns, etc.
+\usepackage{fixltx2e}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
 
 \renewcommand*{\chapterheadstartvskip}{\vspace*{-\topskip}}
 
@@ -24,24 +28,64 @@
 \maketitle
 \setcounter{page}{1}
 
+%-------------------------------------------------------------------------------
 \chapter{Data Model}
 %-------------------------------------------------------------------------------
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur porta enim ac erat tristique aliquet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mattis bibendum libero at convallis. Maecenas volutpat dui neque, sit amet dapibus ligula ornare eget. Suspendisse pellentesque, quam eu condimentum porta, ligula orci bibendum metus, et pretium eros diam sit amet nisl. Suspendisse dolor dolor, posuere vel ullamcorper at, dictum sit amet ligula. Phasellus pulvinar tempor tincidunt.
+\section{Class Diagram}
+% [x] Provide an Entity Relationship model for the conceptual design of your database. This ER model should use the UML class diagram notation as discussed in lecture and in the readings.
+% [x] This logical design should minimise redundancy through normalisation and specify primary keys that maintain entity integrity and foreign keys that maintain referential integrity.
 
-Vestibulum pharetra scelerisque tincidunt. Integer eu arcu nec ex dignissim dapibus. Morbi scelerisque sit amet libero et lacinia. Fusce posuere dapibus pulvinar. Vestibulum est neque, imperdiet faucibus luctus vel, fermentum viverra nisl. Fusce varius eleifend egestas. Praesent nec blandit ante, a interdum nunc. Aliquam lacinia quam erat, et rhoncus odio pulvinar vestibulum. In hac habitasse platea dictumst. Mauris nec dapibus felis. Etiam a pharetra augue, eu fermentum augue. Ut varius sollicitudin augue at molestie. In mollis feugiat malesuada. Nunc at dictum elit. Suspendisse tristique mi vitae velit pulvinar molestie. Curabitur auctor arcu dolor, eu vestibulum neque pellentesque a.
+\includegraphics[width=\textwidth]{uml.png}
 
-Quisque vehicula lorem eu faucibus viverra. Praesent consequat consequat varius. Maecenas ac ante non augue fermentum lobortis a et sapien. Proin tincidunt turpis in ultrices feugiat. Vivamus faucibus tellus at varius elementum. Ut congue purus vel massa sodales, ac dapibus risus interdum. Cras luctus rhoncus est, vel pulvinar metus bibendum vel. Etiam pharetra ante neque, vel egestas velit porta eu. Curabitur et molestie enim, sit amet blandit ligula. Pellentesque sit amet consequat eros. Donec sit amet ornare justo. Integer a placerat velit. Pellentesque commodo facilisis tortor sed auctor. Vivamus interdum ultricies ullamcorper. Aenean posuere sapien sit amet sem condimentum ullamcorper.
+\subsubsection{Understanding the diagram}
+\begin{itemize}[itemsep=-0.5em]
+  \item Primary keys are denoted by a \textsf{primary} tag after the key name.
 
+  \item Underlined transactions denote that they are static, i.e., do not act upon a specific instance of the entity.
+
+  \item Labels on the edges between entities (relationships) should be read from \textsf{1 to n} or \textsf{n to m}. For example, \textsf{Publisher \emph{published} Comic}.
+\end{itemize}
+
+\subsubsection{Transaction to controller function mapping}
+% [ ] Demonstrate through annotation of your conceptual model that the conceptual design correctly supports the transactions needed by your application. Provide a table that maps these transactions to controller functions in the Web2Py Python controller.
+
+\begin{tabularx}{\linewidth}{lllX}\toprule
+\textbf{Model} & \textbf{Transaction} & \textbf{Controller function} & \textbf{Comments} \\ \hline
+
+User & register & default/user/register &  \\
+User & edit & default/user/profile &  \\ \hline
+
+Box & create & box/create &  \\
+Box & delete & box/delete &  \\
+Box & set\_privacy & box/set\_privacy &  \\
+Box & rename & box/view & \textsf{[1]} \\
+Box & add\_comic & box/add\_comic &  \\
+Box & remove\_comic & box/remove\_comic &  \\ \hline
+
+Comic & create & comic/create &  \\
+Comic & search & comic/search &  \\
+Comic & edit & comic/edit &  \\
+Comic & delete & comic/delete &  \\ \hline
+
+\begin{tabular}[c]{@{}l@{}}Writer\\ Artist\\ Publisher\end{tabular} & create & \begin{tabular}[c]{@{}l@{}}comic/create\\ comic/edit\end{tabular} & \textsf{[2]} \\
+
+\bottomrule
+\end{tabularx}
+
+{
+  \setlength{\parindent}{0}
+  \setlength{\parskip}{0.4em}
+
+  \textsf{[1]} This function handles box renames requested by a form in a modal dialog on the \textsf{view} page.
+
+  \textsf{[2]} \textsf{Writer}, \textsf{Artist} and \textsf{Publisher} entities are automatically created when comics require them.
+}
+
+%-------------------------------------------------------------------------------
 \chapter{User Interface Design Rationale}
 %-------------------------------------------------------------------------------
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc blandit nulla odio, iaculis accumsan nunc suscipit id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam interdum congue enim a vulputate. Sed feugiat, arcu nec eleifend semper, ipsum urna sollicitudin dui, in finibus mi magna vitae est. Fusce hendrerit lacus non nulla luctus mattis. Curabitur eget dui vitae nulla facilisis blandit vel ac libero. Nunc eu sem lacus. Duis ut suscipit ipsum, in sollicitudin libero. Maecenas vel mi non nisi condimentum laoreet in ut mauris. Sed turpis sem, placerat quis cursus ac, imperdiet in nibh. Duis bibendum sem vitae nunc accumsan condimentum. Maecenas sit amet malesuada erat, ac bibendum massa. Vivamus porttitor iaculis turpis. In et pellentesque lorem, vitae pharetra diam. Cras ornare velit libero, a ultricies enim maximus quis. Proin pretium eu eros eu faucibus.
-
-Nullam placerat orci vel turpis fringilla ultrices. Praesent at pellentesque est. Mauris gravida, dolor a bibendum semper, quam dolor scelerisque justo, non facilisis enim leo eu purus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Curabitur leo diam, mattis a viverra ut, rutrum ut nibh. Donec sed lectus congue, dictum ex eu, pharetra risus. Suspendisse augue augue, aliquam vel pharetra nec, lacinia quis ex. Phasellus euismod dolor velit, luctus gravida felis semper ac. In tristique libero quis velit placerat, et malesuada risus consequat. Sed accumsan enim erat, id porttitor ligula feugiat ut. Nam interdum pretium mauris a consectetur. Maecenas at sagittis sem, non tincidunt magna. Etiam non sapien nec odio facilisis porttitor vel eget augue. Pellentesque eget ante vitae odio iaculis iaculis id vitae enim.
-
-Vivamus a nisl mattis, vestibulum lacus nec, cursus lacus. Nulla facilisi. Fusce ut blandit odio. Nam rhoncus scelerisque lobortis. Aliquam in ornare odio, eu laoreet purus. Praesent blandit ultricies metus at porta. Integer tincidunt magna ac diam lobortis, sit amet blandit est dapibus. Mauris luctus sapien sit amet magna consectetur mattis. Vestibulum gravida orci vitae ultricies congue. Curabitur lacinia pretium lacus, et aliquet nisl porttitor eu. Ut ac pretium est, vitae tempor leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In iaculis eget odio sollicitudin interdum. Curabitur nec quam tellus. Nulla ac commodo enim. Praesent sed feugiat mi.
-
-Example here...
+\lipsum[3-6]
 
 \end{document}
