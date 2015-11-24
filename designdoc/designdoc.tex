@@ -1,16 +1,15 @@
 \documentclass[fontsize=12pt,a4paper]{scrreprt}
 
 \usepackage[margin=1in,heightrounded]{geometry}
+\usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{lipsum}
 \usepackage[T1]{fontenc} % prevents < in text mode turning into
 \usepackage{textcomp}    % ?', etc
 \usepackage[osf]{mathpazo} % Palatino font
-\usepackage{courier} % nicer typewriter-style fonts
 \usepackage[scaled=.9]{helvet} % nice san serif fonts
 \usepackage{microtype} % micro-typographical extensions
 \usepackage[british]{babel} % British hyphenation patterns, etc.
-\usepackage{fixltx2e}
 \usepackage{enumitem}
 \usepackage{tabularx}
 \usepackage{booktabs}
@@ -38,17 +37,17 @@
 
 \includegraphics[width=\textwidth]{uml.png}
 
-\subsubsection{Understanding the diagram}
+\subsubsection{Legend}
 \begin{itemize}[itemsep=-0.5em]
-  \item Primary keys are denoted by a \textsf{primary} tag after the key name.
+  \item Primary keys are denoted by a \textsf{primary} tag after the attribute name.
 
   \item Underlined transactions denote that they are static, i.e., do not act upon a specific instance of the entity.
 
   \item Labels on the edges between entities (relationships) should be read from \textsf{1 to n} or \textsf{n to m}. For example, \textsf{Publisher \emph{published} Comic}.
 \end{itemize}
 
-\subsubsection{Transaction to controller function mapping}
-% [ ] Demonstrate through annotation of your conceptual model that the conceptual design correctly supports the transactions needed by your application. Provide a table that maps these transactions to controller functions in the Web2Py Python controller.
+\section{Transaction to controller function mapping}
+% [x] Demonstrate through annotation of your conceptual model that the conceptual design correctly supports the transactions needed by your application. Provide a table that maps these transactions to controller functions in the Web2Py Python controller.
 
 \begin{tabularx}{\linewidth}{lllX}\toprule
 \textbf{Model} & \textbf{Transaction} & \textbf{Controller function} & \textbf{Comments} \\ \hline
@@ -79,12 +78,85 @@ Comic & delete & comic/delete &  \\ \hline
 
   \textsf{[1]} This function handles box renames requested by a form in a modal dialog on the \textsf{view} page.
 
-  \textsf{[2]} \textsf{Writer}, \textsf{Artist} and \textsf{Publisher} entities are automatically created when comics require them.
+  \textsf{[2]} \textsf{Writer}, \textsf{Artist} and \textsf{Publisher} entities are created on-demand as and when comics require them.
 }
 
 %-------------------------------------------------------------------------------
-\chapter{User Interface Design Rationale}
+\chapter{Design Rationale}
 %-------------------------------------------------------------------------------
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{other_users_comic.png}
+  \caption{
+    Viewing a comic within another user's collection.
+    (\texttt{/comic/view/19})
+  }
+  \label{fig:OtherUsersComic}
+\end{figure}
+
+\rule{\textwidth}{0.4pt}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.7\textwidth]{add_to_box_modal.png}
+  \caption{
+    The modal dialog which appears when selecting \textsf{Add to box} in \autoref{fig:OtherUsersComic}.
+    \textsf{Unfiled} is selected in the drop-down by default, but here \textsf{(Create new)} has been selected to demonstrate the extra fields.
+  }
+  \label{fig:AddToBoxModal}
+\end{figure}
+
+% [ ] Marks will be awarded for descriptions of design decisions that correctly use and reference concepts taught in class and in readings.
+
+\newpage
+\section{Supporting users through feedforward and feedback}
+% [ ] Choose a user journey supported by your interface. Describe how your interface supports users through good feedforward and feedback.
+
+% Perception
+% [x] Boundaries, distinguishable features, colour
+% Interpretation
+% [x] Group controls, consistency
+% Evaluation
+% [x] Metaphors
+% Intention-Action
+% [x] Functional Feedforward (signposting of what actions will do)
+% [x] Instructions and help
+% [x] Widgets and control labelling
+% Execution
+% [x] Clearly indicating mandatory interaction
+% [x] FEEDBACK. Need to signal to user that events have happened as a result
+
+To demonstrate how the interface supports users through good feedforward and feedback, I will explain the interface design rationale when a user wishes to add another user's comic to their collection.
+
+\autoref{fig:OtherUsersComic} contains several design decisions that support the user through this journey. All widgets that can be clicked (with the exception of text in the navigation bar) are coloured. For example, links in the `breadcrumb' bar, the link in the main page header, and the links on the right-side of the page all have a bright colours. In addition, the widget to add the comic to their collection (the one the user is looking for to proceed on their journey), is coloured in a green hue to stand out, and to indicate that this action performs a different type of action that the others. This distinguishable green hue, and the ``plus'' icon (used as a metaphor for adding), is consistent with all other ``add'' operations across the system. Note that other controls on the page are grouped logically (such as the writers, artists and containing boxes), allowing the user to gloss over groups of widgets which are not relevant to their current intention.
+
+Upon clicking the \textsf{Add to box} button, a small modal dialog appears over the current content, as shown in \autoref{fig:AddToBoxModal}. It contains a small form with a dropdown to select the box they wish to add the comic to. At this stage the user may realise that they want to put the comic in a new box that doesn't exist yet, and by selecting the \textsf{(Create new)} option, extra fields appear to create a new box at the end of the form. This enables the user to perform the task of putting a comic in a new box without having to context switch to the \textsf{New Box} journey. The fields themselves have instructions immediately below them to explain the constraints and ramifications of that input, allowing the user to make informed decisions and reduce erroneous inputs.
+
+The user can clearly find the button to proceed by its relatively large size and bright, filled background colour, contrasting it from the rest of the form. Through the use of the \texttt{required} attribute on the applicable \texttt{<input>} elements, the web browser prevents the form from submitting without the required fields being populated, and prompts the user in the case of an error.
+
+Upon submitting the form, the user is redirected to the newly created comic page, and is prompted by a green flash banner spanning the width of the grid explaining that the transaction was successful, as shown in \autoref{fig:NewBoxFlash}. Thus completing the user journey with clear signposting and feedforward, and clear feedback on their actions whether they be valid or erroneous.
+
+\begin{figure}[b]
+  \centering
+  \includegraphics[width=\textwidth]{new_box_flash.png}
+  \caption{
+    Banner displayed at the top of the page after adding a comic to a new box.
+  }
+  \label{fig:NewBoxFlash}
+\end{figure}
+
+\newpage
+\section{Supporting users through visual layout}
+% [ ] Choose a user journey supported by your interface. Describe how the visual layout supports the user in their journey.
+
+% Identify tasks that are most important to do most often - should dominate interface
+% Make important information prevalent
+% Hue, position, contrast, typography, images and size
+% Structure
+% - Hierarchy, alignment of edges and margins (e.g., Grid layout)
+% - Grouping - through similarity and proximity
+% - Relationships - symbols and colours of controls
 
 \lipsum[3-6]
 
