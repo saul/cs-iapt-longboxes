@@ -46,14 +46,14 @@
     </a>
 
     {{if can_edit:}}
-      <button class="btn btn-default" data-toggle="modal" data-target="#add_comics_modal">
-        <span class="glyphicon glyphicon-plus"></span>
+      <button class="btn btn-success" data-toggle="modal" data-target="#add_comics_modal">
+        <span class="glyphicon glyphicon-log-in"></span>
         Add comics
       </button>
     {{pass}}
 
     <a class="btn btn-success" href="{{=URL('comic', 'create', vars={'box': box.id})}}">
-      <span class="glyphicon glyphicon-plus"></span>
+      <span class="glyphicon glyphicon-file"></span>
       New comic
     </a>
   </div>
