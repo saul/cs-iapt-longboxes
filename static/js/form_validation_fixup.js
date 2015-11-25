@@ -13,6 +13,9 @@
     $('.error_wrapper').each(function() {
       var $this = $(this);
 
+      // remove any other help text for this field
+      $this.siblings('.help-block:not(.error_wrapper)').remove();
+
       $this.addClass('help-block');
       $this.parents('.form-group').addClass('has-error');
 

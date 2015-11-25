@@ -5,6 +5,8 @@
 (function () {
   'use strict';
 
+  var MAX_WORDS = 300;
+
   /*
    * Called on a row of many-to-many form field (artist or writer)
    */
@@ -100,6 +102,38 @@
     regenerateLabels();
   }
 
+  /*
+   * Called to setup the word count element.
+   */
+  function updateWordCount($desc_input) {
+    // create a container to hold the word count text
+    var $wc_container = $('<span></span>');
+    $desc_input.after($wc_container);
+
+    var refreshWordCount = function() {
+      var words = $desc_input.val().match(/(\S+(\s+|\s*$))/g);
+      var wordCount = 0;
+
+      if (words !== null) {
+        wordCount = words.length;
+      }
+
+      var newClass = 'text-danger';
+
+      if (wordCount < 0.8 * MAX_WORDS) {
+        newClass = 'text-success';
+      } else if (wordCount < MAX_WORDS) {
+        newClass = 'text-warning';
+      }
+
+      $wc_container.text(wordCount + ' word' + (wordCount == 1 ? '' : 's') + ' out of ' + (MAX_WORDS - 1) + ' maximum.');
+      $wc_container.attr('class', newClass);
+    };
+
+    $desc_input.on('input', refreshWordCount);
+    refreshWordCount();
+  }
+
   $(function () {
     var $artists = $('#comic_artists__row');
     if ($artists.length) {
@@ -109,6 +143,11 @@
     var $writers = $('#comic_writers__row');
     if ($writers.length) {
       updateManyField($writers);
+    }
+
+    var $desc = $('#comic_description');
+    if ($desc.length) {
+      updateWordCount($desc);
     }
   });
 })();
