@@ -85,6 +85,8 @@ Comic & delete & comic/delete &  \\ \hline
 \chapter{Design Rationale}
 %-------------------------------------------------------------------------------
 
+% [x] Marks will be awarded for descriptions of design decisions that correctly use and reference concepts taught in class and in readings.
+
 \begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{other_users_comic.png}
@@ -95,9 +97,7 @@ Comic & delete & comic/delete &  \\ \hline
   \label{fig:OtherUsersComic}
 \end{figure}
 
-\rule{\textwidth}{0.4pt}
-
-\begin{figure}[h!]
+\begin{figure}[b!]
   \centering
   \includegraphics[width=0.7\textwidth]{add_to_box_modal.png}
   \caption{
@@ -107,11 +107,10 @@ Comic & delete & comic/delete &  \\ \hline
   \label{fig:AddToBoxModal}
 \end{figure}
 
-% [ ] Marks will be awarded for descriptions of design decisions that correctly use and reference concepts taught in class and in readings.
-
 \newpage
+
 \section{Supporting users through feedforward and feedback}
-% [ ] Choose a user journey supported by your interface. Describe how your interface supports users through good feedforward and feedback.
+% Choose a user journey supported by your interface. Describe how your interface supports users through good feedforward and feedback.
 
 % Perception
 % [x] Boundaries, distinguishable features, colour
@@ -149,6 +148,7 @@ Upon submitting the form, the user is redirected to the newly created comic page
 %-------------------------------------------------------------------------------
 
 \newpage
+
 \begin{figure}[p]
   \centering
   \includegraphics[width=\textwidth]{search_results.png}
@@ -158,20 +158,30 @@ Upon submitting the form, the user is redirected to the newly created comic page
   }
   \label{fig:SearchResultGrid}
 \end{figure}
+
+\begin{figure}[p]
+  \centering
+  \includegraphics[width=0.5\textwidth]{comic_command_buttons.png}
+  \caption{
+    Command buttons on the comic detail page. \textsf{Delete} and \textsf{Edit} are only visible when the logged in user owns the comic under inspection.
+  }
+  \label{fig:ComicCommandButtons}
+\end{figure}
+
 \FloatBarrier
 
 \section{Supporting users through visual layout}
 
-% [ ] Choose a user journey supported by your interface. Describe how the visual layout supports the user in their journey.
+% Choose a user journey supported by your interface. Describe how the visual layout supports the user in their journey.
 
 To demonstrate how the interface supports users through visual layout, I will explain the interface design rationale when a user wishes to delete a specific comic in their collection, but cannot remember its name. For the sake of example, in this scenario the user only knows an artist of the comic and not its title.
 
 % [x] Identify tasks that are most important to do most often - should dominate interface
-% [ ] Make important information prevalent
+% [x] Make important information prevalent
 % [x] Hue, position, contrast, typography, images and size
 %  - Structure
 %    [x] Hierarchy, alignment of edges and margins (e.g., Grid layout)
-%    [ ] Grouping - through similarity and proximity
+%    [x] Grouping - through similarity and proximity
 %    [x] Relationships - symbols and colours of controls
 
 The most common tasks in the \emph{Longboxes} application have been placed in the floating navigation bar to ensure they dominate the interface. The floating position of the navigation bar ensures high visibility by always being on screen regardless of scroll position, allowing for quick access to the most common tasks. These include
@@ -185,17 +195,10 @@ The most common tasks in the \emph{Longboxes} application have been placed in th
 
 For the first step in the journey, the user notes the search box in the navigation bar by its contrasting edge, muted instruction text \textsf{Search~comics} (as to not be distracting), and the magnifying glass icon, which is a ubiquitous metaphor across user interfaces to represent a search operation. The user enters the name of the artist of the comic, \textsf{frank}, and presses the \textsf{Enter} key to execute the search.
 
-As shown in \autoref{fig:SearchResultGrid}, the comics are displayed in a grid formation below the page title. The user notices that the query returns comics of which \textsf{Frank Mastromauro} is a writer, however they are only interested in a specific comic drawn by \textsf{Frank Quitely}. As is consistent across the application, the buttons for the most common actions for that page are grouped in the top-right corner, in line with the page title. The user clicks the \textsf{Artist only} button to exclude irrelevant results.
+As shown in \autoref{fig:SearchResultGrid}, the comics are displayed in a grid formation below the page header. The user notices that the query returns comics of which \textsf{Frank Mastromauro} is a writer, however they are only interested in a specific comic drawn by \textsf{Frank Quitely}. As is consistent across the application, the buttons for the most common actions for that page are grouped in the top-right corner, in line with the page header. The user clicks the \textsf{Artist only} button to exclude irrelevant results.
 
-The user finds the comic they intend to delete. To view the comic's detail page, they click the \textsf{More information} link, which has a blue hue to be consistent with other links across the application. \autoref{fig:OtherUsersComic} shows how this page looks when viewing a comic within another user's collection. In this case, as the user is viewing a comic they own, the command buttons appear as \autoref{fig:ComicCommandButtons}.
+The user finds the comic they intend to delete. To view the comic's detail page, they click the \textsf{More information} link, which has a blue hue to be consistent with other links across the application. \autoref{fig:OtherUsersComic} shows how this page looks when viewing a comic within another user's collection. In this case, as the user is viewing a comic they own, the command buttons appear as shown in \autoref{fig:ComicCommandButtons}. The user double-checks that the comic they are about to delete is in fact the correct one, which is easy due to the prevalance of important information and grouping of the comic properties on the right-side, and the large type of the comic title and owner in the page header.
 
-\begin{figure}[b]
-  \centering
-  \includegraphics[width=0.5\textwidth]{comic_command_buttons.png}
-  \caption{
-    Command buttons on the comic detail page when the logged in user owns the comic under inspection.
-  }
-  \label{fig:ComicCommandButtons}
-\end{figure}
+The red hue of the \textsf{Delete} button distinguishes it from the other widgets, and is consistent with other destructive operations across the application. This differentiation supports the user on this journey by making it simpler to find the button. Clicking the button prompts the user to confirm that they intend to irreversably delete the comic, ensuring the click was purposeful. Upon confirmation, the comic is deleted and the user is redirected to their collection with feedback notifying them that the operation completely successfully.
 
 \end{document}
