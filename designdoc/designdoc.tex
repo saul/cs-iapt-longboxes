@@ -1,5 +1,6 @@
 \documentclass[fontsize=12pt,a4paper]{scrreprt}
 
+\usepackage[utf8]{inputenc}
 \usepackage[margin=1in,heightrounded]{geometry}
 \usepackage{hyperref}
 \usepackage{graphicx}
@@ -10,13 +11,14 @@
 \usepackage[scaled=.9]{helvet} % nice san serif fonts
 \usepackage{microtype} % micro-typographical extensions
 \usepackage[british]{babel} % British hyphenation patterns, etc.
-\usepackage{enumitem}
+\usepackage{paralist}
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage[section]{placeins}
 
 \renewcommand*{\chapterheadstartvskip}{\vspace*{-\topskip}}
+\setlength{\parskip}{.5em}
 
-\setlength{\parskip}{1em}
 \pagestyle{headings}
 
 \author{Y0070944}
@@ -38,11 +40,9 @@
 \includegraphics[width=\textwidth]{uml.png}
 
 \subsubsection{Legend}
-\begin{itemize}[itemsep=-0.5em]
+\begin{itemize}
   \item Primary keys are denoted by a \textsf{primary} tag after the attribute name.
-
   \item Underlined transactions denote that they are static, i.e., do not act upon a specific instance of the entity.
-
   \item Labels on the edges between entities (relationships) should be read from \textsf{1 to n} or \textsf{n to m}. For example, \textsf{Publisher \emph{published} Comic}.
 \end{itemize}
 
@@ -73,10 +73,10 @@ Comic & delete & comic/delete &  \\ \hline
 \end{tabularx}
 
 {
-  \setlength{\parindent}{0}
+  \setlength{\parindent}{0pt}
   \setlength{\parskip}{0.4em}
 
-  \textsf{[1]} This function handles box renames requested by a form in a modal dialog on the \textsf{view} page.
+  \textsf{[1]} This controller function handles box renames from a form in a modal dialog on the \textsf{view} page.
 
   \textsf{[2]} \textsf{Writer}, \textsf{Artist} and \textsf{Publisher} entities are created on-demand as and when comics require them.
 }
@@ -129,13 +129,13 @@ Comic & delete & comic/delete &  \\ \hline
 
 To demonstrate how the interface supports users through good feedforward and feedback, I will explain the interface design rationale when a user wishes to add another user's comic to their collection.
 
-\autoref{fig:OtherUsersComic} contains several design decisions that support the user through this journey. All widgets that can be clicked (with the exception of text in the navigation bar) are coloured. For example, links in the `breadcrumb' bar, the link in the main page header, and the links on the right-side of the page all have a bright colours. In addition, the widget to add the comic to their collection (the one the user is looking for to proceed on their journey), is coloured in a green hue to stand out, and to indicate that this action performs a different type of action that the others. This distinguishable green hue, and the ``plus'' icon (used as a metaphor for adding), is consistent with all other ``add'' operations across the system. Note that other controls on the page are grouped logically (such as the writers, artists and containing boxes), allowing the user to gloss over groups of widgets which are not relevant to their current intention.
+\autoref{fig:OtherUsersComic} contains several design decisions that support the user through this journey. All widgets that can be clicked (with the exception of text in the navigation bar) are coloured. For example, links in the `breadcrumb' bar, the link in the main page header, and the links on the right-side of the page all have a bright colours. In addition, the widget to add the comic to their collection (the one the user is looking for to proceed on their journey), is coloured in a green hue to stand out and to indicate that this action performs a different type of action than the others. This distinguishable green hue, and the `arrow into box' icon (used as a metaphor for placing an item into a box), is consistent with other `add comic to box' operations across the application. Note that other controls on the page are grouped logically (such as the writers, artists and containing boxes), allowing the user to gloss over groups of widgets which are not relevant to their current intention.
 
-Upon clicking the \textsf{Add to box} button, a small modal dialog appears over the current content, as shown in \autoref{fig:AddToBoxModal}. It contains a small form with a dropdown to select the box they wish to add the comic to. At this stage the user may realise that they want to put the comic in a new box that doesn't exist yet, and by selecting the \textsf{(Create new)} option, extra fields appear to create a new box at the end of the form. This enables the user to perform the task of putting a comic in a new box without having to context switch to the \textsf{New Box} journey. The fields themselves have instructions immediately below them to explain the constraints and ramifications of that input, allowing the user to make informed decisions and reduce erroneous inputs.
+Upon clicking the \textsf{Add to box} button, a small modal dialog appears over the current content, as shown in \autoref{fig:AddToBoxModal}. It contains a small form with a dropdown to select the box they wish to add the comic to. At this stage the user may realise that they want to put the comic in a new box that doesn't exist yet, and by selecting the \textsf{(Create new)} option, extra fields appear at the end of the form to create a new box. This enables the user to perform the task of putting a comic in a new box without having to context switch to the \textsf{New Box} journey. The fields themselves have instructions immediately below them to explain the constraints and ramifications of that input, allowing the user to make informed decisions and reduce erroneous inputs.
 
 The user can clearly find the button to proceed by its relatively large size and bright, filled background colour, contrasting it from the rest of the form. Through the use of the \texttt{required} attribute on the applicable \texttt{<input>} elements, the web browser prevents the form from submitting without the required fields being populated, and prompts the user in the case of an error.
 
-Upon submitting the form, the user is redirected to the newly created comic page, and is prompted by a green flash banner spanning the width of the grid explaining that the transaction was successful, as shown in \autoref{fig:NewBoxFlash}. Thus completing the user journey with clear signposting and feedforward, and clear feedback on their actions whether they be valid or erroneous.
+Upon submitting the form, the user is redirected to the newly created comic page, and is prompted by a green banner spanning the width of the grid explaining that the transaction was successful, as shown in \autoref{fig:NewBoxFlash}. Thus completing the user journey with clear signposting and feedforward, and clear feedback on their actions whether they be valid or erroneous.
 
 \begin{figure}[b]
   \centering
@@ -146,18 +146,56 @@ Upon submitting the form, the user is redirected to the newly created comic page
   \label{fig:NewBoxFlash}
 \end{figure}
 
+%-------------------------------------------------------------------------------
+
 \newpage
+\begin{figure}[p]
+  \centering
+  \includegraphics[width=\textwidth]{search_results.png}
+  \caption{
+    Search results for the \textsf{frank} query. Red lines superimposed to emphasise grid structure and the alignment of related control edges and text.
+    (\texttt{/comic/search?search=frank})
+  }
+  \label{fig:SearchResultGrid}
+\end{figure}
+\FloatBarrier
+
 \section{Supporting users through visual layout}
+
 % [ ] Choose a user journey supported by your interface. Describe how the visual layout supports the user in their journey.
 
-% Identify tasks that are most important to do most often - should dominate interface
-% Make important information prevalent
-% Hue, position, contrast, typography, images and size
-% Structure
-% - Hierarchy, alignment of edges and margins (e.g., Grid layout)
-% - Grouping - through similarity and proximity
-% - Relationships - symbols and colours of controls
+To demonstrate how the interface supports users through visual layout, I will explain the interface design rationale when a user wishes to delete a specific comic in their collection, but cannot remember its name. For the sake of example, in this scenario the user only knows an artist of the comic and not its title.
 
-\lipsum[3-6]
+% [x] Identify tasks that are most important to do most often - should dominate interface
+% [ ] Make important information prevalent
+% [x] Hue, position, contrast, typography, images and size
+%  - Structure
+%    [x] Hierarchy, alignment of edges and margins (e.g., Grid layout)
+%    [ ] Grouping - through similarity and proximity
+%    [x] Relationships - symbols and colours of controls
+
+The most common tasks in the \emph{Longboxes} application have been placed in the floating navigation bar to ensure they dominate the interface. The floating position of the navigation bar ensures high visibility by always being on screen regardless of scroll position, allowing for quick access to the most common tasks. These include
+\begin{inparaenum}[\itshape a\upshape)]
+  \item viewing your collection,
+  \item creating a new box,
+  \item creating a new comic,
+  \item searching for a comic, and
+  \item managing your user profile (including registration, login and logout)%
+\end{inparaenum}. Note that apart from the logo image, no links have a high saturation in the navigation bar. This is because all of these items can be clicked, and high contrast links in this bar could distract from the main interface. However, the links' background brightens when underneath the cursor to indicate that they are interactive. The links to the left-side and centre are accompanied by icons. These icons are used across the application to refer to collections, boxes and comics to allow for immediate recognition of what a control refers to before reading the text, thereby reducing cognitive load.
+
+For the first step in the journey, the user notes the search box in the navigation bar by its contrasting edge, muted instruction text \textsf{Search~comics} (as to not be distracting), and the magnifying glass icon, which is a ubiquitous metaphor across user interfaces to represent a search operation. The user enters the name of the artist of the comic, \textsf{frank}, and presses the \textsf{Enter} key to execute the search.
+
+As shown in \autoref{fig:SearchResultGrid}, the comics are displayed in a grid formation below the page title. The user notices that the query returns comics of which \textsf{Frank Mastromauro} is a writer, however they are only interested in a specific comic drawn by \textsf{Frank Quitely}. As is consistent across the application, the buttons for the most common actions for that page are grouped in the top-right corner, in line with the page title. The user clicks the \textsf{Artist only} button to exclude irrelevant results.
+
+The user finds the comic they intend to delete. To view the comic's detail page, they click the \textsf{More information} link, which has a blue hue to be consistent with other links across the application. \autoref{fig:OtherUsersComic} shows how this page looks when viewing a comic within another user's collection. In this case, as the user is viewing a comic they own, the command buttons appear as \autoref{fig:ComicCommandButtons}.
+
+\begin{figure}[b]
+  \centering
+  \includegraphics[width=0.5\textwidth]{comic_command_buttons.png}
+  \caption{
+    Command buttons on the comic detail page when the logged in user owns the comic under inspection.
+  }
+  \label{fig:ComicCommandButtons}
+\end{figure}
 
 \end{document}
