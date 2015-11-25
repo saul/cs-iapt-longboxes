@@ -11,7 +11,7 @@ def flash(flash_class, text, redirect_url=None):
         'text': text
     }
 
-    if redirect:
+    if redirect_url:
         current.session.flash = flash_info
         redirect(redirect_url)
     else:
