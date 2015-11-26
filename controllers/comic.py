@@ -122,7 +122,7 @@ def delete():
         flash_and_redirect_back('danger', 'You cannot delete a comic you did not create.')
 
     comic.delete_record()
-    flash_and_redirect_back('info', 'Comic deleted.',
+    flash_and_redirect_back('info', 'Deleted %s.' % comic.full_name,
                             default=URL('collection', 'view', args=[auth.user.id]),
                             avoid='/comic/view')
 

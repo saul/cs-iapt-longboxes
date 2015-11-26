@@ -108,7 +108,7 @@ def delete():
     # Delete the old box
     box.delete_record()
 
-    flash('info', 'Box deleted.', URL('collection', 'view', args=[auth.user.id]))
+    flash('info', '%s box deleted.' % box.name, URL('collection', 'view', args=[auth.user.id]))
 
 
 @auth.requires_login()
@@ -208,7 +208,7 @@ def remove_comic():
     if db(db.comicbox.comic == comic.id).isempty():
         db.comicbox.insert(comic=comic.id, box=_unfiled_box().id)
 
-    flash_and_redirect_back('info', 'Removed comic from box.')
+    flash_and_redirect_back('info', 'Removed %s from %s.' % (comic.full_name, box.name))
 
 
 @auth.requires_login()
