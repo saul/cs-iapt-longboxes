@@ -64,6 +64,8 @@ class ComicForm:
         # Update the writers and artists many-to-many relationship
         self._process_writers_and_artists()
 
+        self._cleanup_unused_publishers()
+
     def process(self, **kwargs):
         kwargs['onsuccess'] = self._on_success
         return self.form.process(**kwargs)
@@ -94,6 +96,16 @@ class ComicForm:
         # clean up - delete any unused artists or writers
         db(db.artist.id.belongs(all_artist_ids - used_artist_ids)).delete()
         db(db.writer.id.belongs(all_writer_ids - used_writer_ids)).delete()
+
+    def _cleanup_unused_publishers(self):
+        """Deletes any publishers which are not referenced by any comics."""
+
+        # find the IDs of all publishers
+        all_publisher_ids = set(map(lambda x: x.id, db().select(db.publisher.id)))
+        used_publisher_ids = set(map(lambda x: x.publisher, db().select(db.comic.publisher, distinct=True)))
+
+        # delete any unused publishers
+        db(db.publisher.id.belongs(all_publisher_ids - used_publisher_ids)).delete()
 
 
 @auth.requires_login()
