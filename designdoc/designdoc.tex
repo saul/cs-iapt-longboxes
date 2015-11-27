@@ -33,7 +33,7 @@
 \chapter{Data Model}
 %-------------------------------------------------------------------------------
 
-\section{Class Diagram}
+%\section{Class Diagram}
 % [x] Provide an Entity Relationship model for the conceptual design of your database. This ER model should use the UML class diagram notation as discussed in lecture and in the readings.
 % [x] This logical design should minimise redundancy through normalisation and specify primary keys that maintain entity integrity and foreign keys that maintain referential integrity.
 
@@ -43,7 +43,14 @@
 \begin{itemize}
   \item Primary keys are denoted by a \textsf{primary} tag after the attribute name.
   \item Underlined transactions denote that they are static, i.e., do not act upon a specific instance of the entity.
-  \item Labels on the edges between entities (relationships) should be read from \textsf{1 to n} or \textsf{n to m}. For example, \textsf{Publisher \emph{published} Comic}.
+  %\item Labels on the edges between entities (relationships) should be read from \textsf{1 to n} or \textsf{n to m}. For example, \textsf{Publisher \emph{published} Comic}.
+\end{itemize}
+
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item \textsf{Artist} and \textsf{Writer} entities were seperated from a single \textsf{Person} entity to increase extensibility and maintainability, as in the future fields specific to artists or writers may need to be added to the model.
+  \item Although not noted in the diagram, \textsf{Box} names are case-insensitively unique to a \textsf{User} to prevent the potential confusion of two boxes owned by the same \textsf{User} with identical names.
+  \item Integer primary keys are used in the model as they are best supported by \emph{web2py}. Alternatively, unique fields are viable candidates for being the primary key.
 \end{itemize}
 
 \section{Transaction to controller function mapping}
@@ -67,7 +74,7 @@ Comic & search & comic/search &  \\
 Comic & edit & comic/edit &  \\
 Comic & delete & comic/delete &  \\ \hline
 
-\begin{tabular}[c]{@{}l@{}}Writer\\ Artist\\ Publisher\end{tabular} & create & \begin{tabular}[c]{@{}l@{}}comic/create\\ comic/edit\end{tabular} & \textsf{[2]} \\
+\begin{tabular}[c]{@{}l@{}}Writer\\ Artist\\ Publisher\end{tabular} & \begin{tabular}[c]{@{}l@{}}create\\ delete\end{tabular} & \begin{tabular}[c]{@{}l@{}}comic/create\\ comic/edit\end{tabular} & \textsf{[2]} \\
 
 \bottomrule
 \end{tabularx}
@@ -78,7 +85,7 @@ Comic & delete & comic/delete &  \\ \hline
 
   \textsf{[1]} This controller function handles box renames from a form in a modal dialog on the \textsf{view} page.
 
-  \textsf{[2]} \textsf{Writer}, \textsf{Artist} and \textsf{Publisher} entities are created on-demand as and when comics require them.
+  \textsf{[2]} \textsf{Writer}, \textsf{Artist} and \textsf{Publisher} entities are created on-demand as and when comics require them. When one of aforementioned entities is no longer referenced by any comic, it is deleted.
 }
 
 %-------------------------------------------------------------------------------
