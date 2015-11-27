@@ -22,7 +22,7 @@ The following tree details all files that were added or changed for the Longboxe
       | longboxes.less - Single stylesheet for entire application.
     + js/
       | comic_form.js - JavaScript to manage word counting and people lists on the comic form.
-      | form_validation_fixup.js - Fixes web2py SQLFORM's incorrect usage of Bootstrap classes on forms.
+      | form_validation_fixup.js - Fixes web2py SQLFORMs incorrect usage of Bootstrap classes on forms.
       | longboxes.js - Initialises Bootstrap tooltips and handles confirmation dialogs for destructive actions. 
       | new_box_form.js - Handles the `Create new` dropdown option when adding a comic to new box.
   + views/
@@ -34,7 +34,7 @@ The following tree details all files that were added or changed for the Longboxe
       | ...
     + default/
       | index.html - Index page of the entire application.
-      | user.html - Enables web2py's auth system to use the Longboxes layout
+      | user.html - Enables web2pys auth system to use the Longboxes layout
     | box_listgroup.html - Partial template to list boxes in a Bootstrap `list-group`
     | comics_preview.html - Partial template to list comic previews in a Bootstrap grid
     | longboxes_layout.html - Base layout template for the entire application
