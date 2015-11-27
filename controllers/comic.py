@@ -83,6 +83,18 @@ class ComicForm:
             writer_id = get_or_create(db.writer, name=writer_name)
             db.comicwriter.insert(comic=self.id, writer=writer_id)
 
+        # find the IDs of all the artists and writers
+        all_artist_ids = set(map(lambda x: x.id, db().select(db.artist.id)))
+        all_writer_ids = set(map(lambda x: x.id, db().select(db.writer.id)))
+
+        # find the IDs of the artists and writers that are referenced by comics
+        used_artist_ids = set(map(lambda x: x.artist, db().select(db.comicartist.artist, distinct=True)))
+        used_writer_ids = set(map(lambda x: x.writer, db().select(db.comicwriter.writer, distinct=True)))
+
+        # clean up - delete any unused artists or writers
+        db(db.artist.id.belongs(all_artist_ids - used_artist_ids)).delete()
+        db(db.writer.id.belongs(all_writer_ids - used_writer_ids)).delete()
+
 
 @auth.requires_login()
 def create():
